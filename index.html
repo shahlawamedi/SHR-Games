@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shahlaw Arcade | Brain & Retro Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Shahlaw Arcade | Touch & Retro Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -15,7 +15,7 @@
             --text-sub: #94a3b8;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; user-select: none; }
 
         body {
             background: radial-gradient(circle at 50% 0%, #1c2541 0%, #0b132b 100%);
@@ -24,88 +24,86 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 24px 16px;
+            padding: 16px;
         }
 
         .container { width: 100%; max-width: 440px; text-align: center; }
-
         h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
-        p.bio { color: var(--text-sub); font-size: 0.9rem; margin-bottom: 20px; }
+        p.bio { color: var(--text-sub); font-size: 0.85rem; margin-bottom: 16px; }
 
-        .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
 
         .game-card {
             background: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: 16px; padding: 14px; text-align: center;
-            cursor: pointer; backdrop-filter: blur(10px); transition: all 0.2s ease;
+            border-radius: 16px; padding: 12px; text-align: center;
+            cursor: pointer; backdrop-filter: blur(10px); transition: transform 0.2s ease, border-color 0.2s ease;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .game-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-        .game-card:active { transform: scale(0.97); }
-        .game-card i { font-size: 2rem; margin-bottom: 8px; }
-        .game-card h4 { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
-        .game-card span { font-size: 0.75rem; color: var(--text-sub); margin-top: 2px; }
+        .game-card:active { transform: scale(0.96); }
+        .game-card i { font-size: 1.8rem; margin-bottom: 6px; }
+        .game-card h4 { font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
+        .game-card span { font-size: 0.7rem; color: var(--text-sub); margin-top: 2px; }
 
         .back-btn {
             background: transparent; color: var(--text-sub); border: 1px solid var(--card-border);
-            padding: 10px 24px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem;
+            padding: 8px 20px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem;
         }
 
         /* Modals */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(11, 19, 43, 0.95); backdrop-filter: blur(12px);
-            z-index: 1000; justify-content: center; align-items: center; padding: 16px;
+            z-index: 1000; justify-content: center; align-items: center; padding: 12px;
         }
 
         .modal-content {
-            background: #1c2541; padding: 20px; border-radius: 24px;
+            background: #1c2541; padding: 16px; border-radius: 24px;
             border: 1px solid var(--card-border); width: 100%; max-width: 360px; text-align: center;
-            max-height: 90vh; overflow-y: auto; position: relative;
+            position: relative; max-height: 95vh; overflow-y: auto;
         }
 
-        .close-btn { background: transparent; color: var(--text-sub); border: 1px solid var(--card-border); padding: 8px 20px; border-radius: 20px; cursor: pointer; margin-top: 14px; }
+        .close-btn { background: transparent; color: var(--text-sub); border: 1px solid var(--card-border); padding: 8px 20px; border-radius: 20px; cursor: pointer; margin-top: 12px; font-size: 0.8rem; }
 
-        /* --- NOKIA SNAKE PHONE UI --- */
-        .nokia-phone {
-            background: #2b3137; border: 4px solid #1a1d20; border-radius: 28px;
-            padding: 16px 12px; width: 260px; margin: 10px auto; box-shadow: inset 0 0 10px #000;
+        /* --- AUTHENTIC NOKIA 3310 CHASSIS --- */
+        .nokia-3310-shell {
+            background: linear-gradient(180deg, #2b3a4a 0%, #17212b 100%);
+            border: 3px solid #0f172a; border-radius: 36px 36px 48px 48px;
+            padding: 16px 14px 20px 14px; width: 250px; margin: 6px auto;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.2), 0 10px 25px rgba(0,0,0,0.6);
         }
-        .nokia-screen {
-            background: #9bbc0f; border: 3px solid #8bac0f; border-radius: 8px;
-            padding: 6px; box-shadow: inset 0 0 8px rgba(0,0,0,0.3); position: relative;
+        .nokia-screen-frame {
+            background: #7d8c7c; border: 4px solid #111827; border-radius: 12px;
+            padding: 6px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); margin-bottom: 12px;
         }
         .nokia-header { font-family: monospace; font-size: 0.65rem; color: #0f380f; display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 4px; }
         #nokiaCanvas { background: #9bbc0f; display: block; margin: 0 auto; border: 1px solid #8bac0f; }
-        .nokia-dpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 120px; margin: 12px auto 0 auto; }
-        .nokia-btn { background: #4a5158; color: #fff; border: 1px solid #1a1d20; border-radius: 6px; padding: 8px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
-        .nokia-btn:active { background: #38bdf8; }
-
-        /* --- BEAUTIFUL SNAKES & LADDERS --- */
-        .sl-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #0b132b; padding: 6px; border-radius: 12px; margin: 12px 0; max-height: 230px; overflow-y: auto; }
-        .sl-cell { aspect-ratio: 1; background: #222e50; font-size: 0.55rem; color: #64748b; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 4px; position: relative; font-weight: bold; }
-        .sl-cell.snake { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; }
-        .sl-cell.ladder { background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #6ee7b7; }
         
-        .dice-box {
-            width: 50px; height: 50px; background: linear-gradient(135deg, #ffffff, #e2e8f0);
-            border-radius: 12px; margin: 10px auto; display: flex; justify-content: center; align-items: center;
-            font-size: 1.5rem; color: #0f172a; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            border: 2px solid var(--accent);
-        }
-
-        /* --- 2048 & PUZZLE BOARDS --- */
-        .grid-2048, .grid-slide { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; }
-        .cell-2048, .cell-slide { aspect-ratio: 1; background: #1c2541; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1rem; color: #fff; }
+        /* Original 3310 Keypad Controls */
+        .nokia-nav-cluster { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 4px; }
+        .nokia-nav-btn { background: linear-gradient(180deg, #475569, #334155); color: #fff; border: 1px solid #0f172a; border-radius: 14px; height: 32px; width: 65px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+        .nokia-navi-key { background: linear-gradient(180deg, #38bdf8, #0284c7); border-radius: 50%; width: 55px; height: 35px; border: 1px solid #0284c7; color: white; font-weight: bold; font-size: 0.8rem; }
         
-        /* Lights Out Grid */
-        .lights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0; }
-        .light-tile { aspect-ratio: 1; background: #334155; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-        .light-tile.on { background: #f59e0b; box-shadow: 0 0 15px #f59e0b; }
+        .nokia-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        .n-key { background: linear-gradient(180deg, #334155, #1e293b); color: #e2e8f0; border: 1px solid #0f172a; border-radius: 10px; padding: 6px 0; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+        .n-key:active { background: #38bdf8; color: #000; }
 
-        /* IQ Memory Grid */
+        /* --- 2048 TOUCH BOARD --- */
+        .grid-2048 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; touch-action: none; }
+        .cell-2048 { aspect-ratio: 1; background: #1c2541; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.1rem; color: #fff; }
+
+        /* --- 15-TILE SLIDE BOARD --- */
+        .grid-slide { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; }
+        .cell-slide { aspect-ratio: 1; background: #38bdf8; color: #0b132b; border-radius: 6px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1rem; cursor: pointer; }
+        .cell-slide.empty { background: transparent; border: 1px dashed var(--card-border); }
+
+        /* --- SNAKES & LADDERS --- */
+        .sl-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #0b132b; padding: 6px; border-radius: 12px; margin: 12px 0; max-height: 220px; overflow-y: auto; }
+        .sl-cell { aspect-ratio: 1; background: #222e50; font-size: 0.55rem; color: #64748b; display: flex; justify-content: center; align-items: center; border-radius: 4px; font-weight: bold; }
+        .dice-box { width: 44px; height: 44px; background: #fff; border-radius: 10px; margin: 8px auto; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; color: #0f172a; font-weight: bold; }
+
+        /* --- IQ MEMORY GRID --- */
         .iq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 12px 0; }
-        .iq-box { aspect-ratio: 1; border-radius: 16px; opacity: 0.4; cursor: pointer; }
+        .iq-box { aspect-ratio: 1; border-radius: 16px; opacity: 0.35; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
         .iq-box.active { opacity: 1; transform: scale(0.96); }
 
         #towerCanvas { background: #0b132b; border-radius: 12px; margin: 10px auto; display: block; border: 1px solid var(--card-border); }
@@ -114,32 +112,32 @@
 <body>
 
 <div class="container">
-    <h1>🧠 Shahlaw Brain Arcade</h1>
-    <p class="bio">10 Retro & Thinking Games to Challenge Your Brain!</p>
+    <h1>🧠 Shahlaw Arcade</h1>
+    <p class="bio">Touch-Optimized Retro & Brain Puzzles</p>
 
     <div class="games-grid">
         <div class="game-card" onclick="openNokiaSnake()">
             <i class="fa-solid fa-mobile-screen-button" style="color: #8bac0f;"></i>
             <h4>Nokia 3310 Snake</h4>
-            <span>Classic Green Screen</span>
+            <span>Original Keypad</span>
         </div>
 
         <div class="game-card" onclick="openTower3D()">
             <i class="fa-solid fa-cubes" style="color: #38bdf8;"></i>
-            <h4>Realistic 3D Stack</h4>
-            <span>Isometric Tower</span>
+            <h4>3D Stack Tower</h4>
+            <span>Realistic Isometric</span>
         </div>
 
         <div class="game-card" onclick="openSnakesLadders()">
             <i class="fa-solid fa-dice" style="color: #ec4899;"></i>
             <h4>Snakes & Ladders</h4>
-            <span>3D Roll vs Smart AI</span>
+            <span>Roll vs AI Bot</span>
         </div>
 
         <div class="game-card" onclick="open2048()">
-            <i class="fa-solid fa-square-multiplication" style="color: #f59e0b;"></i>
-            <h4>2048 Merge</h4>
-            <span>Number Logic Puzzle</span>
+            <i class="fa-solid fa-hand-pointer" style="color: #f59e0b;"></i>
+            <h4>2048 Touch Merge</h4>
+            <span>Swipe Direct Controls</span>
         </div>
 
         <div class="game-card" onclick="openIQ()">
@@ -151,97 +149,79 @@
         <div class="game-card" onclick="openSlidePuzzle()">
             <i class="fa-solid fa-hashtag" style="color: #10b981;"></i>
             <h4>15-Tile Slide</h4>
-            <span>Spatial Ordering</span>
-        </div>
-
-        <div class="game-card" onclick="openFastMath()">
-            <i class="fa-solid fa-calculator" style="color: #ef4444;"></i>
-            <h4>Speed Math</h4>
-            <span>60s Mental Calculation</span>
-        </div>
-
-        <div class="game-card" onclick="openLightsOut()">
-            <i class="fa-solid fa-lightbulb" style="color: #eab308;"></i>
-            <h4>Lights Out Logic</h4>
-            <span>Grid Toggle Puzzle</span>
-        </div>
-
-        <div class="game-card" onclick="openFlood()">
-            <i class="fa-solid fa-fill-drip" style="color: #06b6d4;"></i>
-            <h4>Color Flood Fill</h4>
-            <span>Color Domain Strategy</span>
-        </div>
-
-        <div class="game-card" onclick="openAnagram()">
-            <i class="fa-solid fa-font" style="color: #6366f1;"></i>
-            <h4>Word Anagrams</h4>
-            <span>Brain Vocabulary Solver</span>
+            <span>Tap to Order</span>
         </div>
     </div>
 
     <button class="back-btn" onclick="window.location.href='index.html'"><i class="fa-solid fa-arrow-left"></i> Return to Main Hub</button>
 </div>
 
-<!-- NOKIA SNAKE MODAL -->
+<!-- 1. NOKIA 3310 MODAL -->
 <div class="modal" id="nokiaModal">
     <div class="modal-content">
-        <h3>Nokia 3310 Snake</h3>
-        <p style="font-size:0.75rem; color: var(--text-sub);">Original LCD Retro Gameplay</p>
-        <div class="nokia-phone">
-            <div class="nokia-screen">
+        <h3>Nokia 3310 Arcade</h3>
+        <div class="nokia-3310-shell">
+            <div class="nokia-screen-frame">
                 <div class="nokia-header"><span>SNAKE</span><span id="nokiaScore">00</span></div>
-                <canvas id="nokiaCanvas" width="180" height="180"></canvas>
+                <canvas id="nokiaCanvas" width="160" height="160"></canvas>
             </div>
-            <div class="nokia-dpad">
-                <div></div><button class="nokia-btn" onclick="setNokiaDir(0,-1)">▲</button><div></div>
-                <button class="nokia-btn" onclick="setNokiaDir(-1,0)">◀</button>
-                <button class="nokia-btn" onclick="setNokiaDir(0,1)">▼</button>
-                <button class="nokia-btn" onclick="setNokiaDir(1,0)">▶</button>
+            <div class="nokia-nav-cluster">
+                <button class="nokia-nav-btn" onclick="setNokiaDir(0,-1)">C</button>
+                <button class="nokia-navi-key">NAV</button>
+                <button class="nokia-nav-btn" onclick="setNokiaDir(0,1)">▼▲</button>
+            </div>
+            <div class="nokia-keypad">
+                <button class="n-key">1</button>
+                <button class="n-key" onclick="setNokiaDir(0,-1)">2 ▲</button>
+                <button class="n-key">3</button>
+                <button class="n-key" onclick="setNokiaDir(-1,0)">4 ◀</button>
+                <button class="n-key">5</button>
+                <button class="n-key" onclick="setNokiaDir(1,0)">6 ▶</button>
+                <button class="n-key">7</button>
+                <button class="n-key" onclick="setNokiaDir(0,1)">8 ▼</button>
+                <button class="n-key">9</button>
+                <button class="n-key">*</button>
+                <button class="n-key">0</button>
+                <button class="n-key">#</button>
             </div>
         </div>
         <button class="close-btn" onclick="closeNokia()">Exit Game</button>
     </div>
 </div>
 
-<!-- 3D TOWER BUILDER MODAL -->
+<!-- 2. REALISTIC 3D TOWER MODAL -->
 <div class="modal" id="tower3DModal">
     <div class="modal-content">
-        <h3>Isometric 3D Tower Stacker</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Tap screen to align blocks!</p>
-        <canvas id="towerCanvas" width="280" height="280"></canvas>
+        <h3>Isometric 3D Tower</h3>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Tap screen to stack block accurately!</p>
+        <canvas id="towerCanvas" width="260" height="260"></canvas>
         <button class="close-btn" onclick="closeTower3D()">Exit Game</button>
     </div>
 </div>
 
-<!-- SNAKES & LADDERS MODAL -->
+<!-- 3. SNAKES & LADDERS MODAL -->
 <div class="modal" id="snakesModal">
     <div class="modal-content">
         <h3>Snakes & Ladders AI</h3>
         <p id="slStatus" style="font-size: 0.8rem; color: var(--accent);">You: Tile 1 | AI Bot: Tile 1</p>
         <div class="sl-board" id="slBoard"></div>
         <div class="dice-box" id="diceDisplay">🎲</div>
-        <button class="game-card" id="rollDiceBtn" onclick="rollSLDice()" style="width:100%; flex-direction:row; gap:8px;"><i class="fa-solid fa-dice"></i> Roll Dice</button>
+        <button class="game-card" onclick="rollSLDice()" style="width:100%; flex-direction:row; gap:8px;"><i class="fa-solid fa-dice"></i> Roll Dice</button>
         <button class="close-btn" onclick="closeModal('snakesModal')">Exit Game</button>
     </div>
 </div>
 
-<!-- 2048 PUZZLE MODAL -->
+<!-- 4. TOUCH 2048 MODAL -->
 <div class="modal" id="m2048Modal">
     <div class="modal-content">
-        <h3>2048 Logic Merge</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Use buttons to slide & double numbers!</p>
+        <h3>2048 Touch Merge</h3>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Swipe anywhere on grid to slide tiles!</p>
         <div class="grid-2048" id="g2048"></div>
-        <div style="display:flex; gap:6px; justify-content:center;">
-            <button class="nokia-btn" onclick="move2048('left')">◀</button>
-            <button class="nokia-btn" onclick="move2048('up')">▲</button>
-            <button class="nokia-btn" onclick="move2048('down')">▼</button>
-            <button class="nokia-btn" onclick="move2048('right')">▶</button>
-        </div>
         <button class="close-btn" onclick="closeModal('m2048Modal')">Exit Game</button>
     </div>
 </div>
 
-<!-- IQ MEMORY MODAL -->
+<!-- 5. IQ MEMORY TEST MODAL -->
 <div class="modal" id="iqModal">
     <div class="modal-content">
         <h3>IQ Pattern Recall</h3>
@@ -256,20 +236,20 @@
     </div>
 </div>
 
-<!-- LIGHTS OUT MODAL -->
-<div class="modal" id="lightsModal">
+<!-- 6. 15-TILE SLIDE MODAL -->
+<div class="modal" id="slideModal">
     <div class="modal-content">
-        <h3>Lights Out Logic</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Turn all tiles dark!</p>
-        <div class="lights-grid" id="lightsGrid"></div>
-        <button class="close-btn" onclick="closeModal('lightsModal')">Exit Game</button>
+        <h3>15-Tile Slide Puzzle</h3>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Tap adjacent tiles to shift into empty spot!</p>
+        <div class="grid-slide" id="slideBoard"></div>
+        <button class="close-btn" onclick="closeModal('slideModal')">Exit Game</button>
     </div>
 </div>
 
 <script>
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    /* --- 1. RETRO NOKIA SNAKE ENGINE --- */
+    /* --- GAME 1: RETRO NOKIA SNAKE --- */
     let nCanvas = document.getElementById("nokiaCanvas"), nCtx = nCanvas.getContext("2d");
     let nSnake, nFood, ndx = 10, ndy = 0, nLoop, nScore = 0;
 
@@ -280,10 +260,10 @@
         document.getElementById('nokiaScore').innerText = "00";
         spawnNokiaFood();
         clearInterval(nLoop);
-        nLoop = setInterval(updateNokia, 120);
+        nLoop = setInterval(updateNokia, 130);
     }
     function closeNokia() { clearInterval(nLoop); closeModal('nokiaModal'); }
-    function spawnNokiaFood() { nFood = {x: Math.floor(Math.random()*18)*10, y: Math.floor(Math.random()*18)*10}; }
+    function spawnNokiaFood() { nFood = {x: Math.floor(Math.random()*16)*10, y: Math.floor(Math.random()*16)*10}; }
     function setNokiaDir(x, y) {
         if (x === 1 && ndx === 0) { ndx = 10; ndy = 0; }
         if (x === -1 && ndx === 0) { ndx = -10; ndy = 0; }
@@ -292,24 +272,24 @@
     }
     function updateNokia() {
         let head = {x: nSnake[0].x + ndx, y: nSnake[0].y + ndy};
-        if (head.x < 0 || head.x >= 180 || head.y < 0 || head.y >= 180 || nSnake.some(s=>s.x===head.x&&s.y===head.y)) {
-            alert("💥 Snake Crashed! Score: " + nScore); openNokiaSnake(); return;
+        if (head.x < 0 || head.x >= 160 || head.y < 0 || head.y >= 160 || nSnake.some(s=>s.x===head.x&&s.y===head.y)) {
+            alert("💥 Crash! Final Score: " + nScore); openNokiaSnake(); return;
         }
         nSnake.unshift(head);
         if (head.x === nFood.x && head.y === nFood.y) { nScore += 10; document.getElementById('nokiaScore').innerText = nScore; spawnNokiaFood(); } else { nSnake.pop(); }
-        nCtx.fillStyle = "#9bbc0f"; nCtx.fillRect(0,0,180,180);
+        nCtx.fillStyle = "#9bbc0f"; nCtx.fillRect(0,0,160,160);
         nCtx.fillStyle = "#0f380f";
         nCtx.fillRect(nFood.x+1, nFood.y+1, 8, 8);
         nSnake.forEach(s => nCtx.fillRect(s.x+1, s.y+1, 8, 8));
     }
 
-    /* --- 2. ISOMETRIC 3D TOWER ENGINE --- */
+    /* --- GAME 2: ISOMETRIC 3D TOWER --- */
     let tCanvas = document.getElementById("towerCanvas"), tCtx = tCanvas.getContext("2d");
     let tBlocks = [], tCur, tSpeed = 2, tLoop, tHeight = 0;
 
     function openTower3D() {
         document.getElementById('tower3DModal').style.display = 'flex';
-        tHeight = 0; tBlocks = [{x: 90, y: 220, w: 100, h: 20, color: "#38bdf8"}];
+        tHeight = 0; tBlocks = [{x: 80, y: 210, w: 100, h: 18, color: "#38bdf8"}];
         spawnTowerBlock();
         clearInterval(tLoop);
         tLoop = setInterval(drawTower3D, 20);
@@ -317,40 +297,35 @@
     function closeTower3D() { clearInterval(tLoop); closeModal('tower3DModal'); }
     function spawnTowerBlock() {
         let prev = tBlocks[tBlocks.length - 1];
-        tCur = {x: 0, y: prev.y - 20, w: prev.w, h: 20, color: `hsl(${(tHeight * 25) % 360}, 80%, 60%)`};
+        tCur = {x: 0, y: prev.y - 18, w: prev.w, h: 18, color: `hsl(${(tHeight * 30) % 360}, 80%, 60%)`};
         tSpeed = Math.abs(tSpeed);
     }
     function drawTower3D() {
         tCur.x += tSpeed;
-        if (tCur.x <= 0 || tCur.x + tCur.w >= 280) tSpeed *= -1;
-        tCtx.fillStyle = "#0b132b"; tCtx.fillRect(0,0,280,280);
-
+        if (tCur.x <= 0 || tCur.x + tCur.w >= 260) tSpeed *= -1;
+        tCtx.fillStyle = "#0b132b"; tCtx.fillRect(0,0,260,260);
         tBlocks.forEach(b => drawIsoBlock(b.x, b.y, b.w, b.h, b.color));
         drawIsoBlock(tCur.x, tCur.y, tCur.w, tCur.h, tCur.color);
-
-        tCtx.fillStyle = "#ffffff"; tCtx.font = "bold 13px sans-serif";
-        tCtx.fillText("Height: " + tHeight + " Floors", 12, 24);
+        tCtx.fillStyle = "#ffffff"; tCtx.font = "bold 12px sans-serif";
+        tCtx.fillText("Stacked: " + tHeight + " Floors", 10, 20);
     }
     function drawIsoBlock(x, y, w, h, col) {
         tCtx.fillStyle = col; tCtx.fillRect(x, y, w, h);
-        tCtx.fillStyle = "rgba(0,0,0,0.25)"; tCtx.fillRect(x, y + h - 4, w, 4); // Shadow depth
-        tCtx.fillStyle = "rgba(255,255,255,0.2)"; tCtx.fillRect(x, y, w, 4); // Top 3D highlight
+        tCtx.fillStyle = "rgba(0,0,0,0.3)"; tCtx.fillRect(x, y + h - 3, w, 3);
+        tCtx.fillStyle = "rgba(255,255,255,0.25)"; tCtx.fillRect(x, y, w, 3);
     }
-    tCanvas.addEventListener('click', () => {
+    tCanvas.addEventListener('pointerdown', () => {
         let prev = tBlocks[tBlocks.length - 1];
         let diff = tCur.x - prev.x;
-        if (Math.abs(diff) >= tCur.w) { alert("💥 Tower Collapsed! Final Height: " + tHeight); openTower3D(); return; }
+        if (Math.abs(diff) >= tCur.w) { alert("💥 Tower Collapsed! Height: " + tHeight); openTower3D(); return; }
         if (diff > 0) { tCur.w -= diff; } else { tCur.x = prev.x; tCur.w += diff; }
         tBlocks.push({...tCur}); tHeight++;
-        if (tBlocks.length > 9) tBlocks.forEach(b => b.y += 20);
+        if (tBlocks.length > 8) tBlocks.forEach(b => b.y += 18);
         spawnTowerBlock();
     });
 
-    /* --- 3. SNAKES & LADDERS ENHANCED ENGINE --- */
+    /* --- GAME 3: SNAKES & LADDERS --- */
     let pPos = 1, bPos = 1, slTurn = true;
-    const snakesMap = { 98: 78, 95: 56, 88: 24, 62: 18, 48: 26, 36: 6 };
-    const laddersMap = { 4: 14, 9: 31, 20: 38, 28: 84, 51: 67, 71: 91 };
-
     function openSnakesLadders() {
         document.getElementById('snakesModal').style.display = 'flex';
         pPos = 1; bPos = 1; slTurn = true; renderSLBoard();
@@ -360,72 +335,77 @@
         document.getElementById('slStatus').innerText = `🔴 You: Tile ${pPos} | 🤖 AI: Tile ${bPos}`;
         for (let i = 100; i >= 1; i--) {
             let cell = document.createElement('div'); cell.className = 'sl-cell';
-            if (snakesMap[i]) cell.classList.add('snake');
-            if (laddersMap[i]) cell.classList.add('ladder');
-            let mark = pPos===i ? '🔴' : (bPos===i ? '🤖' : i);
-            cell.innerText = mark; board.appendChild(cell);
+            cell.innerText = pPos===i ? '🔴' : (bPos===i ? '🤖' : i);
+            board.appendChild(cell);
         }
     }
     function rollSLDice() {
         if (!slTurn) return;
         let roll = Math.floor(Math.random()*6) + 1;
         document.getElementById('diceDisplay').innerText = roll;
-        pPos += roll;
-        if (snakesMap[pPos]) pPos = snakesMap[pPos];
-        if (laddersMap[pPos]) pPos = laddersMap[pPos];
-        if (pPos >= 100) { pPos = 100; renderSLBoard(); alert("🎉 You beat the AI!"); return; }
+        pPos = Math.min(100, pPos + roll);
+        if (pPos === 100) { renderSLBoard(); alert("🎉 You Beat AI!"); return; }
         slTurn = false; renderSLBoard();
         setTimeout(() => {
-            let bRoll = Math.floor(Math.random()*6) + 1;
-            bPos += bRoll;
-            if (snakesMap[bPos]) bPos = snakesMap[bPos];
-            if (laddersMap[bPos]) bPos = laddersMap[bPos];
-            if (bPos >= 100) { bPos = 100; renderSLBoard(); alert("🤖 AI won the race!"); }
-            else { slTurn = true; renderSLBoard(); }
-        }, 700);
+            bPos = Math.min(100, bPos + Math.floor(Math.random()*6) + 1);
+            slTurn = true; renderSLBoard();
+        }, 600);
     }
 
-    /* --- 4. 2048 PUZZLE ENGINE --- */
-    let board2048 = Array(16).fill(0);
+    /* --- GAME 4: REAL SWIPE-CONTROLLED 2048 --- */
+    let b2048 = Array(16).fill(0), touchStartX = 0, touchStartY = 0;
     function open2048() {
         document.getElementById('m2048Modal').style.display = 'flex';
-        board2048 = Array(16).fill(0); addTile2048(); addTile2048(); render2048();
+        b2048 = Array(16).fill(0); add2048Tile(); add2048Tile(); render2048Board();
     }
-    function addTile2048() {
-        let empty = board2048.map((v, i) => v === 0 ? i : null).filter(v => v !== null);
-        if (empty.length) board2048[empty[Math.floor(Math.random()*empty.length)]] = 2;
+    function add2048Tile() {
+        let empty = b2048.map((v, i) => v === 0 ? i : null).filter(v => v !== null);
+        if (empty.length) b2048[empty[Math.floor(Math.random()*empty.length)]] = Math.random() > 0.1 ? 2 : 4;
     }
-    function render2048() {
+    function render2048Board() {
         let g = document.getElementById('g2048'); g.innerHTML = '';
-        board2048.forEach(v => {
+        b2048.forEach(v => {
             let c = document.createElement('div'); c.className = 'cell-2048';
             c.innerText = v ? v : '';
-            c.style.background = v ? `hsl(${Math.log2(v)*35}, 70%, 50%)` : '#1c2541';
+            c.style.background = v ? `hsl(${Math.log2(v)*32}, 75%, 45%)` : '#1c2541';
             g.appendChild(c);
         });
     }
-    function move2048(dir) { addTile2048(); render2048(); }
+    let el2048 = document.getElementById('g2048');
+    el2048.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; }, false);
+    el2048.addEventListener('touchend', e => {
+        let dx = e.changedTouches[0].clientX - touchStartX;
+        let dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > Math.abs(dy)) { slide2048(dx > 0 ? 'R' : 'L'); }
+        else { slide2048(dy > 0 ? 'D' : 'U'); }
+    }, false);
 
-    /* --- 5. LIGHTS OUT PUZZLE ENGINE --- */
-    let lights = Array(9).fill(false);
-    function openLightsOut() {
-        document.getElementById('lightsModal').style.display = 'flex';
-        lights = lights.map(() => Math.random() > 0.5); renderLights();
-    }
-    function renderLights() {
-        let g = document.getElementById('lightsGrid'); g.innerHTML = '';
-        lights.forEach((state, i) => {
-            let d = document.createElement('div'); d.className = 'light-tile' + (state ? ' on' : '');
-            d.onclick = () => toggleLight(i); g.appendChild(d);
-        });
-    }
-    function toggleLight(i) {
-        [i, i-1, i+1, i-3, i+3].forEach(idx => { if (idx>=0 && idx<9) lights[idx] = !lights[idx]; });
-        renderLights();
-        if (lights.every(l => !l)) setTimeout(() => alert("🎉 Puzzle Solved! Light logic cleared."), 100);
+    function slide2048(dir) {
+        let moved = false;
+        for (let i = 0; i < 4; i++) {
+            let row = [];
+            for (let j = 0; j < 4; j++) {
+                let idx = (dir==='L'||dir==='R') ? i*4+j : j*4+i;
+                row.push(b2048[idx]);
+            }
+            if (dir==='R'||dir==='D') row.reverse();
+            let filtered = row.filter(v => v);
+            for (let k = 0; k < filtered.length - 1; k++) {
+                if (filtered[k] === filtered[k+1]) { filtered[k] *= 2; filtered[k+1] = 0; moved = true; }
+            }
+            filtered = filtered.filter(v => v);
+            while (filtered.length < 4) filtered.push(0);
+            if (dir==='R'||dir==='D') filtered.reverse();
+            for (let j = 0; j < 4; j++) {
+                let idx = (dir==='L'||dir==='R') ? i*4+j : j*4+i;
+                if (b2048[idx] !== filtered[j]) moved = true;
+                b2048[idx] = filtered[j];
+            }
+        }
+        if (moved) { add2048Tile(); render2048Board(); }
     }
 
-    /* --- 6. IQ MEMORY ENGINE --- */
+    /* --- GAME 5: IQ MEMORY TEST --- */
     let iqSeq = [], userSeq = [], iqLvl = 0;
     function openIQ() { document.getElementById('iqModal').style.display = 'flex'; iqSeq = []; iqLvl = 0; nextIQ(); }
     function nextIQ() {
@@ -437,20 +417,40 @@
             let b = document.getElementById('b' + iqSeq[i]); b.classList.add('active');
             setTimeout(() => b.classList.remove('active'), 300); i++;
             if (i >= iqSeq.length) { clearInterval(t); document.getElementById('iqStatus').innerText = "Repeat Pattern!"; }
-        }, 600);
+        }, 550);
     }
     function pressIQ(n) {
         userSeq.push(n);
         let idx = userSeq.length - 1;
         if (userSeq[idx] !== iqSeq[idx]) { alert(`🧠 Test Over! Sequence Level Reached: ${iqLvl}`); openIQ(); return; }
-        if (userSeq.length === iqSeq.length) setTimeout(nextIQ, 600);
+        if (userSeq.length === iqSeq.length) setTimeout(nextIQ, 500);
     }
 
-    /* UNIFIED EXTRA STUBS FOR BRAIN PUZZLES */
-    function openSlidePuzzle() { alert("15-Tile Slide Game: Slide numbers 1-15 into numeric order!"); }
-    function openFastMath() { alert("Mental Speed Math: Solve 10 rapid algebra equations under 30 seconds!"); }
-    function openFlood() { alert("Color Flood Fill: Fill the entire grid with a single unified color in under 15 steps!"); }
-    function openAnagram() { alert("Word Anagram Solver: Rearrange jumbled letters into valid words!"); }
+    /* --- GAME 6: 15-TILE SLIDE PUZZLE --- */
+    let sTiles = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0];
+    function openSlidePuzzle() {
+        document.getElementById('slideModal').style.display = 'flex';
+        sTiles.sort(() => Math.random() - 0.5); renderSlide();
+    }
+    function renderSlide() {
+        let b = document.getElementById('slideBoard'); b.innerHTML = '';
+        sTiles.forEach((val, idx) => {
+            let cell = document.createElement('div');
+            cell.className = 'cell-slide' + (val === 0 ? ' empty' : '');
+            cell.innerText = val ? val : '';
+            cell.onclick = () => moveSlideTile(idx);
+            b.appendChild(cell);
+        });
+    }
+    function moveSlideTile(idx) {
+        let emptyIdx = sTiles.indexOf(0);
+        let validMoves = [idx-1, idx+1, idx-4, idx+4];
+        if (validMoves.includes(emptyIdx)) {
+            sTiles[emptyIdx] = sTiles[idx];
+            sTiles[idx] = 0;
+            renderSlide();
+        }
+    }
 </script>
 </body>
 </html>
