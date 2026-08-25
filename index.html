@@ -61,7 +61,7 @@
             padding: 8px 24px; border-radius: 20px; cursor: pointer; margin-top: 14px; font-size: 0.85rem; font-weight: bold;
         }
 
-        /* --- NOKIA 3310 HARDWARE --- */
+        /* --- NOKIA D-PAD HARDWARE --- */
         .nokia-3310-shell {
             background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
             border: 4px solid #334155; border-radius: 36px 36px 48px 48px;
@@ -70,33 +70,46 @@
         }
         .nokia-screen-frame {
             background: #9bbc0f; border: 4px solid #0f172a; border-radius: 8px;
-            padding: 4px; box-shadow: inset 0 0 6px rgba(0,0,0,0.4); margin-bottom: 12px;
+            padding: 4px; box-shadow: inset 0 0 6px rgba(0,0,0,0.4); margin-bottom: 16px;
         }
         .nokia-header { font-family: monospace; font-size: 0.65rem; color: #0f380f; display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 2px; }
         #nokiaCanvas { background: #9bbc0f; display: block; margin: 0 auto; }
         
-        .nokia-nav-cluster { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .nokia-btn-side { background: linear-gradient(180deg, #475569, #1e293b); color: #fff; border: 1px solid #64748b; border-radius: 12px; height: 32px; width: 60px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-        .nokia-btn-center { background: linear-gradient(180deg, #38bdf8, #0284c7); border-radius: 50%; width: 60px; height: 36px; border: 1px solid #7dd3fc; color: white; font-weight: bold; font-size: 0.8rem; }
-        
-        .nokia-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-        .n-key { background: linear-gradient(180deg, #334155, #0f172a); color: #f8fafc; border: 1px solid #475569; border-radius: 10px; padding: 8px 0; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-        .n-key:active { background: #38bdf8; color: #000; }
+        .nokia-dpad-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 6px;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto;
+        }
+        .dpad-btn {
+            background: linear-gradient(180deg, #334155, #0f172a);
+            color: #38bdf8; border: 1px solid #475569; border-radius: 12px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.2rem; font-weight: bold; cursor: pointer;
+        }
+        .dpad-btn:active { background: #38bdf8; color: #000; }
+        .dpad-btn.action-btn { font-size: 0.8rem; color: #ef4444; }
 
-        /* --- SNAKES & LADDERS VISUAL CONTAINER --- */
+        /* --- SNAKES & LADDERS VISUAL --- */
         .sl-wrapper { position: relative; width: 100%; max-width: 320px; margin: 0 auto; }
         .sl-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #0b132b; padding: 4px; border-radius: 12px; aspect-ratio: 1; }
-        .sl-cell { background: #1e293b; font-size: 0.55rem; color: #64748b; display: flex; justify-content: center; align-items: center; border-radius: 2px; font-weight: bold; position: relative; }
-        .sl-cell.snake-head { background: #450a0a; color: #f87171; }
-        .sl-cell.ladder-bottom { background: #064e3b; color: #34d399; }
+        .sl-cell { background: #1e293b; font-size: 0.5rem; color: #64748b; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 2px; font-weight: bold; position: relative; }
+        .sl-cell.snake { background: #450a0a; color: #f87171; }
+        .sl-cell.ladder { background: #064e3b; color: #34d399; }
         .sl-token { position: absolute; font-size: 0.75rem; z-index: 5; }
         .dice-box { width: 44px; height: 44px; background: #fff; border-radius: 10px; margin: 8px auto; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; color: #0f172a; font-weight: bold; }
 
-        /* --- 2048 TOUCH BOARD --- */
+        /* --- BLOCK BLAST --- */
+        .bb-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; aspect-ratio: 1; }
+        .bb-cell { aspect-ratio: 1; background: #1c2541; border-radius: 6px; cursor: pointer; transition: background 0.1s; }
+        .bb-cell.filled { background: #38bdf8; box-shadow: 0 0 8px #38bdf8; }
+
+        /* --- 2048 & SLIDE PUZZLE --- */
         .grid-2048 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; touch-action: none; width: 100%; aspect-ratio: 1; }
         .cell-2048 { aspect-ratio: 1; background: #1c2541; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.2rem; color: #fff; }
-
-        /* --- SLIDE PUZZLE BOARD --- */
         .grid-slide { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; aspect-ratio: 1; }
         .cell-slide { aspect-ratio: 1; background: #38bdf8; color: #0b132b; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
         .cell-slide.empty { background: transparent; border: 1px dashed var(--card-border); cursor: default; }
@@ -113,25 +126,25 @@
 
 <div class="container">
     <h1> Arcade Hub</h1>
-    <p class="bio">Touch & Retro Arcade Games</p>
+    <p class="bio">Retro Arcade & Block Puzzles</p>
 
     <div class="games-grid">
         <div class="game-card" onclick="openGame('nokiaModal', initNokia)">
-            <i class="fa-solid fa-mobile-screen-button" style="color: #8bac0f;"></i>
-            <h4>Nokia 3310 Snake</h4>
-            <span>Keypad & Arrows</span>
+            <i class="fa-solid fa-gamepad" style="color: #8bac0f;"></i>
+            <h4>Nokia Snake</h4>
+            <span>Arrow D-Pad Only</span>
         </div>
 
-        <div class="game-card" onclick="openGame('towerModal', initTower)">
-            <i class="fa-solid fa-cubes" style="color: #38bdf8;"></i>
-            <h4>3D Stack Tower</h4>
-            <span>Tap to Stack</span>
+        <div class="game-card" onclick="openGame('blockBlastModal', initBlockBlast)">
+            <i class="fa-solid fa-shapes" style="color: #38bdf8;"></i>
+            <h4>Block Blast</h4>
+            <span>Clear Lines</span>
         </div>
 
         <div class="game-card" onclick="openGame('snakesModal', initSL)">
             <i class="fa-solid fa-dice" style="color: #ec4899;"></i>
             <h4>Snakes & Ladders</h4>
-            <span>Visual Board vs AI</span>
+            <span>Realistic Board vs AI</span>
         </div>
 
         <div class="game-card" onclick="openGame('m2048Modal', init2048)">
@@ -154,7 +167,7 @@
     </div>
 </div>
 
-<!-- 1. NOKIA 3310 MODAL -->
+<!-- 1. NOKIA MODAL -->
 <div class="modal" id="nokiaModal">
     <div class="modal-content">
         <div class="nokia-3310-shell">
@@ -162,37 +175,29 @@
                 <div class="nokia-header"><span>SNAKE</span><span id="nokiaScore">SCORE: 0</span></div>
                 <canvas id="nokiaCanvas" width="160" height="140"></canvas>
             </div>
-            <div class="nokia-nav-cluster">
-                <button class="nokia-btn-side" onclick="setNokiaDir(0,-1)">C</button>
-                <button class="nokia-btn-center">NAV</button>
-                <button class="nokia-btn-side" onclick="setNokiaDir(0,1)">▼▲</button>
-            </div>
-            <div class="nokia-keypad">
-                <button class="n-key">1</button>
-                <button class="n-key" onclick="setNokiaDir(0,-1)">2 ▲</button>
-                <button class="n-key">3</button>
-                <button class="n-key" onclick="setNokiaDir(-1,0)">4 ◀</button>
-                <button class="n-key">5</button>
-                <button class="n-key" onclick="setNokiaDir(1,0)">6 ▶</button>
-                <button class="n-key">7</button>
-                <button class="n-key" onclick="setNokiaDir(0,1)">8 ▼</button>
-                <button class="n-key">9</button>
-                <button class="n-key">*</button>
-                <button class="n-key">0</button>
-                <button class="n-key">#</button>
+            <div class="nokia-dpad-container">
+                <div></div>
+                <button class="dpad-btn" onclick="setNokiaDir(0,-1)">▲</button>
+                <div></div>
+                <button class="dpad-btn" onclick="setNokiaDir(-1,0)">◀</button>
+                <button class="dpad-btn action-btn" onclick="initNokia()">OK</button>
+                <button class="dpad-btn" onclick="setNokiaDir(1,0)">▶</button>
+                <button class="dpad-btn action-btn" onclick="stopNokia()">C</button>
+                <button class="dpad-btn" onclick="setNokiaDir(0,1)">▼</button>
+                <div></div>
             </div>
         </div>
         <button class="close-btn" onclick="closeGame('nokiaModal', stopNokia)">Close Game</button>
     </div>
 </div>
 
-<!-- 2. 3D TOWER MODAL -->
-<div class="modal" id="towerModal">
+<!-- 2. BLOCK BLAST MODAL -->
+<div class="modal" id="blockBlastModal">
     <div class="modal-content">
-        <h3>3D Stack Tower</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px;">Tap anywhere to drop the moving block!</p>
-        <canvas id="towerCanvas" width="260" height="260"></canvas>
-        <button class="close-btn" onclick="closeGame('towerModal', stopTower)">Close Game</button>
+        <h3>Block Blast</h3>
+        <p id="bbScore" style="font-size: 0.8rem; color: var(--accent); margin-bottom: 6px;">Score: 0</p>
+        <div class="bb-grid" id="bbGrid"></div>
+        <button class="close-btn" onclick="closeGame('blockBlastModal')">Close Game</button>
     </div>
 </div>
 
@@ -255,19 +260,19 @@
         if (stopFunc) stopFunc();
     }
 
-    // --- GAME 1: NOKIA SNAKE ---
+    // --- NOKIA SNAKE ENGINE ---
     let nCanvas = document.getElementById("nokiaCanvas"), nCtx = nCanvas.getContext("2d");
-    let nSnake, nFood, ndx, ndy, nLoop, nScore;
+    let nSnake, nFood, ndx, ndy, nLoop, nScore, nGameActive = false;
 
     function initNokia() {
         nSnake = [{x: 80, y: 70}, {x: 70, y: 70}, {x: 60, y: 70}];
-        ndx = 10; ndy = 0; nScore = 0;
+        ndx = 10; ndy = 0; nScore = 0; nGameActive = true;
         document.getElementById('nokiaScore').innerText = "SCORE: 0";
         spawnNokiaFood();
         clearInterval(nLoop);
-        nLoop = setInterval(updateNokia, 110);
+        nLoop = setInterval(updateNokia, 120);
     }
-    function stopNokia() { clearInterval(nLoop); }
+    function stopNokia() { nGameActive = false; clearInterval(nLoop); }
     function spawnNokiaFood() {
         nFood = {
             x: Math.floor(Math.random() * 16) * 10,
@@ -275,25 +280,27 @@
         };
     }
     function setNokiaDir(x, y) {
+        if (!nGameActive) return;
         if (x === 1 && ndx === 0) { ndx = 10; ndy = 0; }
         else if (x === -1 && ndx === 0) { ndx = -10; ndy = 0; }
         else if (y === -1 && ndy === 0) { ndx = 0; ndy = -10; }
         else if (y === 1 && ndy === 0) { ndx = 0; ndy = 10; }
     }
     
-    // Physical Keyboard Listener
     window.addEventListener('keydown', e => {
-        if (e.key === 'ArrowUp' || e.key === '2') setNokiaDir(0, -1);
-        else if (e.key === 'ArrowDown' || e.key === '8') setNokiaDir(0, 1);
-        else if (e.key === 'ArrowLeft' || e.key === '4') setNokiaDir(-1, 0);
-        else if (e.key === 'ArrowRight' || e.key === '6') setNokiaDir(1, 0);
+        if (e.key === 'ArrowUp') setNokiaDir(0, -1);
+        else if (e.key === 'ArrowDown') setNokiaDir(0, 1);
+        else if (e.key === 'ArrowLeft') setNokiaDir(-1, 0);
+        else if (e.key === 'ArrowRight') setNokiaDir(1, 0);
     });
 
     function updateNokia() {
+        if (!nGameActive) return;
         let head = {x: nSnake[0].x + ndx, y: nSnake[0].y + ndy};
         if (head.x < 0 || head.x >= 160 || head.y < 0 || head.y >= 140 || nSnake.some(s => s.x === head.x && s.y === head.y)) {
+            nGameActive = false;
+            clearInterval(nLoop);
             alert("Game Over! Score: " + nScore);
-            initNokia();
             return;
         }
         nSnake.unshift(head);
@@ -310,62 +317,56 @@
         nSnake.forEach(s => nCtx.fillRect(s.x + 1, s.y + 1, 8, 8));
     }
 
-    // --- GAME 2: 3D STACK TOWER ---
-    let tCanvas = document.getElementById("towerCanvas"), tCtx = tCanvas.getContext("2d");
-    let tBlocks, tCur, tSpeed, tLoop, tScore;
+    // --- BLOCK BLAST ENGINE ---
+    let bbGridData = Array(25).fill(0), bbScoreVal = 0;
 
-    function initTower() {
-        tScore = 0; tSpeed = 2.5;
-        tBlocks = [{x: 80, y: 220, w: 100, h: 20, col: "#38bdf8"}];
-        spawnTowerBlock();
-        clearInterval(tLoop);
-        tLoop = setInterval(drawTower, 20);
+    function initBlockBlast() {
+        bbGridData = Array(25).fill(0);
+        bbScoreVal = 0;
+        document.getElementById('bbScore').innerText = "Score: 0";
+        renderBlockBlast();
     }
-    function stopTower() { clearInterval(tLoop); }
-    function spawnTowerBlock() {
-        let prev = tBlocks[tBlocks.length - 1];
-        let hue = (tScore * 25) % 360;
-        tCur = {x: 0, y: prev.y - 20, w: prev.w, h: 20, col: `hsl(${hue}, 80%, 60%)`};
-        tSpeed = Math.abs(tSpeed);
+    function renderBlockBlast() {
+        let grid = document.getElementById('bbGrid'); grid.innerHTML = '';
+        bbGridData.forEach((val, i) => {
+            let cell = document.createElement('div');
+            cell.className = 'bb-cell' + (val ? ' filled' : '');
+            cell.onclick = () => toggleBlockBlast(i);
+            grid.appendChild(cell);
+        });
     }
-    function drawTower() {
-        tCur.x += tSpeed;
-        if (tCur.x <= 0 || tCur.x + tCur.w >= 260) tSpeed *= -1;
-        tCtx.fillStyle = "#0b132b"; tCtx.fillRect(0, 0, 260, 260);
-        tBlocks.forEach(b => drawBlock(b));
-        drawBlock(tCur);
-        tCtx.fillStyle = "#fff"; tCtx.font = "bold 14px sans-serif";
-        tCtx.fillText("Score: " + tScore, 10, 25);
+    function toggleBlockBlast(idx) {
+        bbGridData[idx] = bbGridData[idx] ? 0 : 1;
+        checkBlockBlastLines();
+        renderBlockBlast();
     }
-    function drawBlock(b) {
-        tCtx.fillStyle = b.col;
-        tCtx.fillRect(b.x, b.y, b.w, b.h);
-        tCtx.fillStyle = "rgba(0,0,0,0.25)";
-        tCtx.fillRect(b.x, b.y + b.h - 4, b.w, 4);
-    }
-    tCanvas.onclick = function() {
-        let prev = tBlocks[tBlocks.length - 1];
-        let diff = tCur.x - prev.x;
-        if (Math.abs(diff) >= tCur.w) {
-            alert("Tower Collapsed! Final Score: " + tScore);
-            initTower();
-            return;
+    function checkBlockBlastLines() {
+        let cleared = 0;
+        // Check Rows
+        for (let r = 0; r < 5; r++) {
+            let full = true;
+            for (let c = 0; c < 5; c++) if (!bbGridData[r * 5 + c]) full = false;
+            if (full) {
+                cleared++;
+                for (let c = 0; c < 5; c++) bbGridData[r * 5 + c] = 0;
+            }
         }
-        if (diff > 0) {
-            tCur.w -= diff;
-        } else {
-            tCur.x = prev.x;
-            tCur.w += diff;
+        // Check Cols
+        for (let c = 0; c < 5; c++) {
+            let full = true;
+            for (let r = 0; r < 5; r++) if (!bbGridData[r * 5 + c]) full = false;
+            if (full) {
+                cleared++;
+                for (let r = 0; r < 5; r++) bbGridData[r * 5 + c] = 0;
+            }
         }
-        tBlocks.push({...tCur});
-        tScore++;
-        if (tBlocks.length > 8) {
-            tBlocks.forEach(b => b.y += 20);
+        if (cleared > 0) {
+            bbScoreVal += cleared * 50;
+            document.getElementById('bbScore').innerText = "Score: " + bbScoreVal;
         }
-        spawnTowerBlock();
-    };
+    }
 
-    // --- GAME 3: SNAKES & LADDERS VISUAL ENGINE ---
+    // --- SNAKES & LADDERS ENGINE ---
     let pPos = 1, bPos = 1, slTurn = true;
     const snakes = { 98: 78, 95: 75, 93: 73, 87: 24, 64: 60, 62: 19, 49: 11, 47: 26, 16: 6 };
     const ladders = { 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
@@ -392,8 +393,8 @@
             let cell = document.createElement('div');
             cell.className = 'sl-cell';
             
-            if (snakes[i]) { cell.classList.add('snake-head'); cell.innerText = `🐍${i}`; }
-            else if (ladders[i]) { cell.classList.add('ladder-bottom'); cell.innerText = `🪜${i}`; }
+            if (snakes[i]) { cell.classList.add('snake'); cell.innerText = `🐍\n${i}`; }
+            else if (ladders[i]) { cell.classList.add('ladder'); cell.innerText = `🪜\n${i}`; }
             else { cell.innerText = i; }
 
             if (pPos === i && bPos === i) {
@@ -428,7 +429,7 @@
         }, 700);
     }
 
-    // --- GAME 4: TOUCH 2048 MERGE ---
+    // --- TOUCH 2048 ENGINE ---
     let grid2048 = Array(16).fill(0), tSX = 0, tSY = 0;
 
     function init2048() {
@@ -499,7 +500,7 @@
         if (moved) { addTile2048(); render2048(); }
     }
 
-    // --- GAME 5: IQ MEMORY TEST ---
+    // --- IQ MEMORY ENGINE ---
     let iqSeq = [], iqUserSeq = [], iqLvl = 0, iqAccept = false;
 
     function initIQ() {
@@ -544,7 +545,7 @@
         }
     }
 
-    // --- GAME 6: 15-TILE SLIDE ---
+    // --- 15-TILE SLIDE ENGINE ---
     let sGrid = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0];
 
     function initSlide() {
