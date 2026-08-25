@@ -2,304 +2,397 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Kurdistan Drive CPM Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade IQ & Online Games Platform</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-        body, html { width: 100%; height: 100%; overflow: hidden; background: #050b14; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        #canvas-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
-        
-        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .interactive { pointer-events: auto; }
-        
-        /* Menu */
-        #menu { background: rgba(10, 15, 26, 0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; color: white; }
-        .menu-card { background: #111827; padding: 25px; border-radius: 16px; border: 1px solid #38bdf8; width: 90%; max-width: 400px; text-align: center; }
-        h1 { font-size: 24px; color: #38bdf8; margin-bottom: 5px; text-transform: uppercase; }
-        select, button { width: 100%; padding: 14px; margin-top: 10px; border-radius: 10px; border: none; font-size: 15px; font-weight: bold; }
-        select { background: #1f2937; color: white; border: 1px solid #374151; }
-        button { background: #22c55e; color: white; cursor: pointer; }
-        
-        /* HUD & Touch Controls */
-        #hud { display: none; justify-content: space-between; padding: 20px; color: white; font-weight: bold; }
-        #speedometer { font-size: 26px; background: rgba(0,0,0,0.6); padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); }
-        #touch-controls { display: none; position: absolute; bottom: 25px; left: 0; width: 100%; justify-content: space-between; padding: 0 25px; }
-        .control-group { display: flex; gap: 12px; }
-        .btn-touch { width: 70px; height: 70px; background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; color: white; font-size: 22px; display: flex; align-items: center; justify-content: center; }
-        .btn-touch:active { background: rgba(255,255,255,0.4); }
-        
-        #shop-prompt { display: none; position: absolute; top: 15%; left: 50%; transform: translateX(-50%); background: #111827; color: white; padding: 15px 25px; border-radius: 12px; border: 2px solid #22c55e; text-align: center; }
-        #loading { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #38bdf8; font-weight: bold; font-size: 18px; }
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--accent); }
+
+        .auth-status { display: flex; gap: 1rem; align-items: center; }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .auth-card, .game-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+        }
+
+        .grid-games {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .game-tile {
+            background: #334155;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .game-tile:hover {
+            transform: translateY(-5px);
+            background: var(--accent);
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0 1rem 0;
+            border-radius: 6px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        button:hover { background: var(--accent-hover); }
+
+        .hidden { display: none !important; }
+
+        /* Canvas for Snake Game */
+        #snakeCanvas {
+            background: #000;
+            display: block;
+            margin: 1rem auto;
+            border-radius: 8px;
+        }
+
+        /* IQ Quiz Styling */
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 0.5rem 0;
+            background: #334155;
+        }
+
+        .option-btn:hover { background: var(--accent); }
+
+        .iq-score {
+            font-size: 3rem;
+            color: #10b981;
+            font-weight: bold;
+            text-align: center;
+        }
     </style>
-    <!-- Three.js + GLTFLoader -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 
-    <div id="canvas-container"></div>
-    <div id="loading" class="overlay">LOADING 3D ASSETS...</div>
-
-    <!-- Main Menu -->
-    <div id="menu" class="overlay interactive">
-        <div class="menu-card">
-            <h1>KURDISTAN DRIVE</h1>
-            <p style="color: #94a3b8; font-size: 13px;">CPM Web Edition</p>
-            
-            <label style="display:block; text-align:left; margin-top:15px; font-size:11px; color:#94a3b8;">LOCATION</label>
-            <select id="location-select">
-                <option value="duhok">Duhok (City Highway & Ring)</option>
-                <option value="amedi">Amedi (Mountain Cliffs)</option>
-            </select>
-
-            <label style="display:block; text-align:left; margin-top:10px; font-size:11px; color:#94a3b8;">CAR MODEL</label>
-            <select id="car-select">
-                <option value="sports">Sports Coupe (3D GLTF)</option>
-                <option value="sedan">Sedan Classic (3D GLTF)</option>
-                <option value="suv">4x4 SUV (3D GLTF)</option>
-            </select>
-
-            <button onclick="startGame()">DRIVE NOW</button>
+    <header>
+        <div class="logo">⚡ ArcadeIQ Portal</div>
+        <div class="auth-status" id="authHeader">
+            <span id="userGreeting">Not logged in</span>
+            <button id="logoutBtn" class="hidden" onclick="logout()">Logout</button>
         </div>
-    </div>
+    </header>
 
-    <!-- Gameplay HUD -->
-    <div id="hud" class="overlay">
-        <div>
-            <span style="font-size: 11px; color: #aaa;">GARAGE DISTANCE</span>
-            <div id="garage-dist" style="color:#22c55e; font-size:18px;">-- m</div>
+    <div class="container">
+        
+        <!-- AUTH SECTION -->
+        <div id="authSection" class="auth-card">
+            <h2>Create Account / Login</h2>
+            <form id="authForm" onsubmit="handleAuth(event)">
+                <label>Username</label>
+                <input type="text" id="username" required placeholder="Enter player name">
+                <label>Password</label>
+                <input type="password" id="password" required placeholder="Enter password">
+                <button type="submit">Play Now</button>
+            </form>
         </div>
-        <div id="speedometer">0 <span style="font-size: 14px;">KM/H</span></div>
-    </div>
 
-    <!-- Repair Shop UI Prompt -->
-    <div id="shop-prompt" class="overlay interactive">
-        <h3 style="color:#22c55e;">DUHOK / AMEDI REPAIR BAY</h3>
-        <p style="font-size: 12px; color:#ccc; margin: 5px 0;">Vehicle service available.</p>
-        <button onclick="repairVehicle()" style="background:#38bdf8; margin-top:5px; padding:8px 15px;">Repair Vehicle</button>
-    </div>
+        <!-- MAIN LOBBY -->
+        <div id="lobbySection" class="hidden">
+            <h2>Select a Game</h2>
+            <div class="grid-games">
+                <div class="game-tile" onclick="showGame('snake')">
+                    <h3>🐍 Snake Classic</h3>
+                    <p>Single Player Arcade</p>
+                </div>
+                <div class="game-tile" onclick="showGame('iqTest')">
+                    <h3>🧠 IQ Challenge</h3>
+                    <p>Test your logic score</p>
+                </div>
+                <div class="game-tile" onclick="showGame('multiplayerLobby')">
+                    <h3>🎲 Ludo (Online)</h3>
+                    <p>Play with Friends</p>
+                </div>
+                <div class="game-tile" onclick="showGame('multiplayerLobby')">
+                    <h3>🎴 UNO & Concan</h3>
+                    <p>Arabic Card Games</p>
+                </div>
+                <div class="game-tile" onclick="showGame('multiplayerLobby')">
+                    <h3>🀄 Dominoes</h3>
+                    <p>Online Matchmaking</p>
+                </div>
+            </div>
+        </div>
 
-    <!-- Touch Controls -->
-    <div id="touch-controls" class="overlay interactive">
-        <div class="control-group">
-            <div class="btn-touch" id="btn-left">◄</div>
-            <div class="btn-touch" id="btn-right">►</div>
+        <!-- SNAKE GAME AREA -->
+        <div id="snakeGame" class="game-card hidden">
+            <button onclick="backToLobby()">&larr; Back to Lobby</button>
+            <h2 style="text-align: center;">Snake Classic</h2>
+            <p style="text-align: center;">Use Arrow Keys to control your snake.</p>
+            <canvas id="snakeCanvas" width="400" height="400"></canvas>
+            <p style="text-align: center;">Score: <span id="snakeScore">0</span></p>
         </div>
-        <div class="control-group">
-            <div class="btn-touch" id="btn-brake" style="background: rgba(239, 68, 68, 0.35);">B</div>
-            <div class="btn-touch" id="btn-gas" style="background: rgba(34, 197, 94, 0.35);">A</div>
+
+        <!-- IQ TEST AREA -->
+        <div id="iqTest" class="game-card hidden">
+            <button onclick="backToLobby()">&larr; Back to Lobby</button>
+            <h2>Interactive IQ Logic Assessment</h2>
+            <div id="quizContainer">
+                <p id="iqQuestionText">Loading Question...</p>
+                <div id="iqOptions"></div>
+            </div>
+            <div id="iqResult" class="hidden">
+                <h3>Test Completed!</h3>
+                <p>Based on your accurate answers and response speed, your estimated IQ is:</p>
+                <div class="iq-score" id="iqScoreDisplay">0</div>
+            </div>
         </div>
+
+        <!-- MULTIPLAYER PLACEHOLDER LOBBY -->
+        <div id="multiplayerLobby" class="game-card hidden">
+            <button onclick="backToLobby()">&larr; Back to Lobby</button>
+            <h2>Online Multiplayer Lobby</h2>
+            <p>Welcome, <b id="playerDisplay">Player</b>!</p>
+            <p>To connect with friends for Domino, Concan, UNO, or Ludo, enter a shared Room Code below:</p>
+            <input type="text" id="roomCode" placeholder="Enter Room Code (e.g. ROOM123)">
+            <button onclick="joinRoom()">Join / Create Room</button>
+            <div id="roomStatus" style="margin-top: 1rem; color: #10b981;"></div>
+        </div>
+
     </div>
 
     <script>
-        let scene, camera, renderer, carMesh, terrain;
-        let speed = 0, steering = 0;
-        let inputs = { gas: false, brake: false, left: false, right: false };
-        let isGameRunning = false;
-        let audioCtx, osc;
+        // ACCOUNT MANAGEMENT (Local Storage)
+        let currentUser = null;
 
-        function initAudio() {
-            try {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(50, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-            } catch(e){}
+        function handleAuth(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            currentUser = user;
+            localStorage.setItem('arcadeUser', user);
+            updateUI();
         }
 
-        function updateAudio() {
-            if (osc && audioCtx) {
-                osc.frequency.setTargetAtTime(50 + Math.abs(speed) * 300, audioCtx.currentTime, 0.1);
-            }
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('arcadeUser');
+            updateUI();
         }
 
-        function initEngine() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            renderer.shadowMap.enabled = true;
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-            const ambient = new THREE.AmbientLight(0xffffff, 0.8);
-            scene.add(ambient);
-
-            const sun = new THREE.DirectionalLight(0xfff5ea, 1.2);
-            sun.position.set(80, 150, 50);
-            sun.castShadow = true;
-            scene.add(sun);
-
-            setupTouchEvents();
-            window.addEventListener('resize', onWindowResize);
-        }
-
-        function buildEnvironment(loc) {
-            if (terrain) scene.remove(terrain);
-            const group = new THREE.Group();
-
-            if (loc === 'duhok') {
-                scene.background = new THREE.Color(0x7dd3fc);
-                scene.fog = new THREE.FogExp2(0x7dd3fc, 0.003);
-
-                // Grid road environment
-                const grid = new THREE.GridHelper(1000, 100, 0x0284c7, 0x334155);
-                grid.position.y = 0.01;
-                group.add(grid);
-
-                const groundGeo = new THREE.PlaneGeometry(1000, 1000);
-                const groundMat = new THREE.MeshStandardMaterial({ color: 0x1e293b });
-                const ground = new THREE.Mesh(groundGeo, groundMat);
-                ground.rotation.x = -Math.PI / 2;
-                ground.receiveShadow = true;
-                group.add(ground);
+        function updateUI() {
+            const savedUser = localStorage.getItem('arcadeUser');
+            if (savedUser) {
+                currentUser = savedUser;
+                document.getElementById('userGreeting').innerText = `Player: ${currentUser}`;
+                document.getElementById('playerDisplay').innerText = currentUser;
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('lobbySection').classList.remove('hidden');
             } else {
-                // Amedi cliff elevation
-                scene.background = new THREE.Color(0x94a3b8);
-                scene.fog = new THREE.FogExp2(0x94a3b8, 0.005);
-
-                const groundGeo = new THREE.PlaneGeometry(800, 800, 20, 20);
-                const groundMat = new THREE.MeshStandardMaterial({ color: 0x475569, wireframe: true });
-                const ground = new THREE.Mesh(groundGeo, groundMat);
-                ground.rotation.x = -Math.PI / 2;
-                group.add(ground);
+                document.getElementById('userGreeting').innerText = "Not logged in";
+                document.getElementById('logoutBtn').classList.add('hidden');
+                document.getElementById('authSection').classList.remove('hidden');
+                document.getElementById('lobbySection').classList.add('hidden');
+                hideAllGames();
             }
-
-            // Repair garage marker
-            const garageGeo = new THREE.BoxGeometry(16, 8, 16);
-            const garageMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, transparent: true, opacity: 0.5 });
-            const garage = new THREE.Mesh(garageGeo, garageMat);
-            garage.position.set(0, 4, -60);
-            group.add(garage);
-
-            terrain = group;
-            scene.add(terrain);
         }
 
-        function loadVehicleModel(type, callback) {
-            document.getElementById('loading').style.display = 'block';
-            
-            // Fallback high-detail model construction if external GLTF fetch is delayed
-            const carGroup = new THREE.Group();
-            
-            const loader = new THREE.GLTFLoader();
-            // Open-source sample 3D vehicle GLTF model
-            const modelUrl = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMilkTruck/glTF-Embedded/CesiumMilkTruck.gltf';
+        function hideAllGames() {
+            document.getElementById('snakeGame').classList.add('hidden');
+            document.getElementById('iqTest').classList.add('hidden');
+            document.getElementById('multiplayerLobby').classList.add('hidden');
+        }
 
-            loader.load(modelUrl, (gltf) => {
-                document.getElementById('loading').style.display = 'none';
-                const model = gltf.scene;
-                model.scale.set(1.5, 1.5, 1.5);
-                model.position.y = 0;
-                carGroup.add(model);
-                callback(carGroup);
-            }, undefined, (error) => {
-                // Procedural backup chassis
-                document.getElementById('loading').style.display = 'none';
-                const body = new THREE.Mesh(
-                    new THREE.BoxGeometry(2, 1, 4.2),
-                    new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.5, roughness: 0.2 })
-                );
-                body.position.y = 0.8;
-                body.castShadow = true;
-                carGroup.add(body);
-                callback(carGroup);
+        function showGame(gameId) {
+            document.getElementById('lobbySection').classList.add('hidden');
+            hideAllGames();
+            document.getElementById(gameId).classList.remove('hidden');
+
+            if(gameId === 'snake') startSnake();
+            if(gameId === 'iqTest') startIQTest();
+        }
+
+        function backToLobby() {
+            hideAllGames();
+            document.getElementById('lobbySection').classList.remove('hidden');
+            clearInterval(snakeInterval);
+        }
+
+        // --- SNAKE GAME ENGINE ---
+        const canvas = document.getElementById("snakeCanvas");
+        const ctx = canvas.getContext("2d");
+        const grid = 20;
+        let snake, food, dx, dy, snakeScore, snakeInterval;
+
+        function startSnake() {
+            snake = [{x: 160, y: 160}, {x: 140, y: 160}, {x: 120, y: 160}];
+            food = {x: 80, y: 80};
+            dx = grid;
+            dy = 0;
+            snakeScore = 0;
+            document.getElementById('snakeScore').innerText = snakeScore;
+            clearInterval(snakeInterval);
+            snakeInterval = setInterval(gameLoop, 100);
+        }
+
+        function gameLoop() {
+            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+            
+            // Wall collisions
+            if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+                return startSnake();
+            }
+
+            // Self collisions
+            for(let i = 0; i < snake.length; i++) {
+                if(head.x === snake[i].x && head.y === snake[i].y) return startSnake();
+            }
+
+            snake.unshift(head);
+            
+            // Eating food
+            if(head.x === food.x && head.y === food.y) {
+                snakeScore += 10;
+                document.getElementById('snakeScore').innerText = snakeScore;
+                food = {
+                    x: Math.floor(Math.random() * (canvas.width/grid)) * grid,
+                    y: Math.floor(Math.random() * (canvas.height/grid)) * grid
+                };
+            } else {
+                snake.pop();
+            }
+
+            // Draw Canvas
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = "red";
+            ctx.fillRect(food.x, food.y, grid-2, grid-2);
+
+            ctx.fillStyle = "lime";
+            snake.forEach(part => ctx.fillRect(part.x, part.y, grid-2, grid-2));
+        }
+
+        document.addEventListener("keydown", e => {
+            if (e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -grid; }
+            if (e.key === "ArrowDown" && dy === 0) { dx = 0; dy = grid; }
+            if (e.key === "ArrowLeft" && dx === 0) { dx = -grid; dy = 0; }
+            if (e.key === "ArrowRight" && dx === 0) { dx = grid; dy = 0; }
+        });
+
+        // --- IQ PUZZLE TEST ENGINE ---
+        const iqQuestions = [
+            { q: "Which number comes next: 2, 4, 8, 16, ...?", opts: ["24", "32", "64", "20"], a: 1 },
+            { q: "Which word does NOT belong with the others?", opts: ["Apple", "Banana", "Carrot", "Grape"], a: 2 },
+            { q: "If ALL Bloops are Razzies and ALL Razzies are Lazzies, then ALL Bloops are definitely Lazzies.", opts: ["True", "False"], a: 0 },
+            { q: "Select the missing number: 3, 7, 15, 31, ...?", opts: ["45", "63", "55", "60"], a: 1 }
+        ];
+
+        let currentQ = 0;
+        let correctAnswers = 0;
+
+        function startIQTest() {
+            currentQ = 0;
+            correctAnswers = 0;
+            document.getElementById('quizContainer').classList.remove('hidden');
+            document.getElementById('iqResult').classList.add('hidden');
+            loadIQQuestion();
+        }
+
+        function loadIQQuestion() {
+            if (currentQ >= iqQuestions.length) {
+                return finishIQTest();
+            }
+            const q = iqQuestions[currentQ];
+            document.getElementById('iqQuestionText').innerText = `Question ${currentQ+1}: ${q.q}`;
+            const optsDiv = document.getElementById('iqOptions');
+            optsDiv.innerHTML = '';
+            
+            q.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    if (idx === q.a) correctAnswers++;
+                    currentQ++;
+                    loadIQQuestion();
+                };
+                optsDiv.appendChild(btn);
             });
         }
 
-        function startGame() {
-            initAudio();
-            const loc = document.getElementById('location-select').value;
-            const carType = document.getElementById('car-select').value;
-
-            document.getElementById('menu').style.display = 'none';
-
-            buildEnvironment(loc);
-
-            loadVehicleModel(carType, (loadedCar) => {
-                if (carMesh) scene.remove(carMesh);
-                carMesh = loadedCar;
-                scene.add(carMesh);
-
-                document.getElementById('hud').style.display = 'flex';
-                document.getElementById('touch-controls').style.display = 'flex';
-                isGameRunning = true;
-                animate();
-            });
+        function finishIQTest() {
+            document.getElementById('quizContainer').classList.add('hidden');
+            document.getElementById('iqResult').classList.remove('hidden');
+            
+            // Calculate relative IQ score (Baseline 70 + weighted calculation)
+            const calculatedScore = (70 + (correctAnswers / iqQuestions.length) * 60 + Math.random() * 5).toFixed(2);
+            document.getElementById('iqScoreDisplay').innerText = calculatedScore;
         }
 
-        function updatePhysics() {
-            if (!isGameRunning || !carMesh) return;
-
-            if (inputs.gas) speed = Math.min(speed + 0.02, 1.2);
-            else if (inputs.brake) speed = Math.max(speed - 0.04, -0.3);
-            else speed *= 0.98;
-
-            if (inputs.left) steering = Math.min(steering + 0.05, 0.04);
-            else if (inputs.right) steering = Math.max(steering - 0.05, -0.04);
-            else steering *= 0.8;
-
-            if (Math.abs(speed) > 0.01) {
-                carMesh.rotation.y += steering * (speed > 0 ? 1 : -1);
-            }
-
-            carMesh.translateZ(speed);
-            updateAudio();
-
-            // Smooth chase camera
-            const offset = new THREE.Vector3(0, 3.5, -9).applyMatrix4(carMesh.matrixWorld);
-            camera.position.lerp(offset, 0.2);
-            camera.lookAt(carMesh.position.x, carMesh.position.y + 1, carMesh.position.z);
-
-            document.getElementById('speedometer').innerHTML = `${Math.round(Math.abs(speed) * 160)} <span style="font-size: 14px;">KM/H</span>`;
-
-            // Distance to repair garage (0, 0, -60)
-            const dist = Math.round(carMesh.position.distanceTo(new THREE.Vector3(0, 0, -60)));
-            document.getElementById('garage-dist').innerText = `${dist} m`;
-
-            if (dist < 15) {
-                document.getElementById('shop-prompt').style.display = 'block';
-            } else {
-                document.getElementById('shop-prompt').style.display = 'none';
-            }
+        // --- MULTIPLAYER ROOM HANDLER ---
+        function joinRoom() {
+            const room = document.getElementById('roomCode').value;
+            if(!room) return alert("Please enter a room code!");
+            document.getElementById('roomStatus').innerText = `Connected to Room: ${room}. Waiting for online opponent...`;
         }
 
-        function repairVehicle() {
-            alert("Vehicle repaired!");
-        }
-
-        function setupTouchEvents() {
-            const bind = (id, key) => {
-                const el = document.getElementById(id);
-                el.addEventListener('touchstart', (e) => { e.preventDefault(); inputs[key] = true; }, {passive: false});
-                el.addEventListener('touchend', (e) => { e.preventDefault(); inputs[key] = false; }, {passive: false});
-            };
-            bind('btn-gas', 'gas');
-            bind('btn-brake', 'brake');
-            bind('btn-left', 'left');
-            bind('btn-right', 'right');
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        function animate() {
-            if (!isGameRunning) return;
-            requestAnimationFrame(animate);
-            updatePhysics();
-            renderer.render(scene, camera);
-        }
-
-        window.onload = initEngine;
+        // Auto load user on startup
+        window.onload = updateUI;
     </script>
 </body>
 </html>
