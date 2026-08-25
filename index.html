@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kurdistan Drive Simulator</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background: #111; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        #canvas-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+        
+        /* UI Overlay */
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .interactive { pointer-events: auto; }
+        
+        /* Main Menu */
+        #menu { background: rgba(15, 23, 42, 0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; color: white; gap: 15px; }
+        .menu-card { background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155; width: 85%; max-width: 400px; text-align: center; }
+        h1 { font-size: 24px; color: #38bdf8; margin-bottom: 5px; }
+        select, button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 8px; border: none; font-size: 16px; font-weight: bold; }
+        select { background: #0f172a; color: white; border: 1px solid #475569; }
+        button { background: #22c55e; color: white; cursor: pointer; }
+        button:active { transform: scale(0.98); }
+        
+        /* HUD & Controls */
+        #hud { display: none; justify-content: space-between; padding: 15px; color: white; font-weight: bold; }
+        #speedometer { font-size: 24px; background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 20px; }
+        #health-bar { width: 120px; height: 16px; background: #333; border-radius: 8px; overflow: hidden; border: 1px solid #555; }
+        #health-fill { width: 100%; height: 100%; background: #22c55e; transition: width 0.2s; }
+        
+        /* Mobile Controls */
+        #touch-controls { display: none; position: absolute; bottom: 20px; left: 0; width: 100%; justify-content: space-between; padding: 0 20px; }
+        .control-group { display: flex; gap: 10px; }
+        .btn-touch { width: 65px; height: 65px; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4); border-radius: 50%; color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+        .btn-touch:active { background: rgba(255,255,255,0.5); }
+        
+        /* Repair Shop Prompt */
+        #shop-prompt { display: none; position: absolute; top: 20%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); color: white; padding: 15px 25px; border-radius: 10px; border: 1px solid #22c55e; text-align: center; }
+    </style>
+    <!-- Three.js for 3D graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <!-- Main Menu -->
+    <div id="menu" class="overlay interactive">
+        <div class="menu-card">
+            <h1>KURDISTAN DRIVE</h1>
+            <p style="color: #94a3b8; font-size: 14px;">Select Vehicle & Location</p>
+            
+            <label style="display:block; text-align:left; margin-top:15px; font-size:12px; color:#94a3b8;">LOCATION</label>
+            <select id="location-select">
+                <option value="duhok">Duhok (City Highway & City Center)</option>
+                <option value="amedi">Amedi (Mountain Cliffs & Curves)</option>
+            </select>
+
+            <label style="display:block; text-align:left; margin-top:10px; font-size:12px; color:#94a3b8;">CAR BRAND & MODEL</label>
+            <select id="car-select">
+                <optgroup label="Nissan">
+                    <option value="nissan_gt-r">Nissan GT-R R35</option>
+                    <option value="nissan_patrol">Nissan Patrol Super Safari</option>
+                    <option value="nissan_370z">Nissan 370Z</option>
+                </optgroup>
+                <optgroup label="Toyota">
+                    <option value="toyota_supra">Toyota Supra MK5</option>
+                    <option value="toyota_lc300">Toyota Land Cruiser LC300</option>
+                    <option value="toyota_hilux">Toyota Hilux GR</option>
+                </optgroup>
+                <optgroup label="Jeep & Dodge & Chrysler">
+                    <option value="dodge_hellcat">Dodge Charger Hellcat</option>
+                    <option value="jeep_trackhawk">Jeep Grand Cherokee Trackhawk</option>
+                    <option value="chrysler_300c">Chrysler 300C SRT</option>
+                </optgroup>
+                <optgroup label="General Motors (GM)">
+                    <option value="chevrolet_corvette">Chevrolet Corvette C8</option>
+                    <option value="cadillac_escalade">Cadillac Escalade V</option>
+                    <option value="gmc_sierra">GMC Sierra AT4</option>
+                </optgroup>
+            </select>
+
+            <button onclick="startGame()">DRIVE NOW</button>
+        </div>
+    </div>
+
+    <!-- Gameplay HUD -->
+    <div id="hud" class="overlay">
+        <div>
+            <span style="font-size: 12px; color: #aaa;">VEHICLE HEALTH</span>
+            <div id="health-bar"><div id="health-fill"></div></div>
+        </div>
+        <div id="speedometer">0 <span style="font-size: 14px;">KM/H</span></div>
+    </div>
+
+    <!-- Repair Shop UI Prompt -->
+    <div id="shop-prompt" class="overlay interactive">
+        <p>REPAIR GARAGE</p>
+        <button onclick="repairVehicle()" style="background:#38bdf8; margin-top:5px; padding:8px 15px;">Fix Car ($0)</button>
+    </div>
+
+    <!-- Touch Controls for iPhone -->
+    <div id="touch-controls" class="overlay interactive">
+        <div class="control-group">
+            <div class="btn-touch" id="btn-left">◄</div>
+            <div class="btn-touch" id="btn-right">►</div>
+        </div>
+        <div class="control-group">
+            <div class="btn-touch" id="btn-brake" style="background: rgba(239, 68, 68, 0.4);">B</div>
+            <div class="btn-touch" id="btn-gas" style="background: rgba(34, 197, 94, 0.4);">A</div>
+        </div>
+    </div>
+
+    <script>
+        let scene, camera, renderer, vehicle, terrain, repairShop;
+        let speed = 0, steering = 0, health = 100;
+        let inputs = { gas: false, brake: false, left: false, right: false };
+        let currentLocation = 'duhok';
+        let isGameRunning = false;
+
+        function initEngine() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // iPhone resolution optimization
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Ambient Light & Sun
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(100, 200, 50);
+            scene.add(dirLight);
+
+            setupTouchEvents();
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function buildMap(loc) {
+            if (terrain) scene.remove(terrain);
+            if (repairShop) scene.remove(repairShop);
+
+            const mapGroup = new THREE.Group();
+
+            if (loc === 'duhok') {
+                // Flat City Terrain with Highway Layout
+                scene.background = new THREE.Color(0x87ceeb);
+                scene.fog = new THREE.FogExp2(0x87ceeb, 0.005);
+
+                const groundGeo = new THREE.PlaneGeometry(1000, 1000);
+                const groundMat = new THREE.MeshBasicMaterial({ color: 0x334155 });
+                const ground = new THREE.Mesh(groundGeo, groundMat);
+                ground.rotation.x = -Math.PI / 2;
+                mapGroup.add(ground);
+
+                // Add simple city building blocks
+                for (let i = -400; i <= 400; i += 100) {
+                    if (Math.abs(i) < 50) continue;
+                    const bGeo = new THREE.BoxGeometry(40, Math.random() * 60 + 20, 40);
+                    const bMat = new THREE.MeshLambertMaterial({ color: 0x64748b });
+                    const building = new THREE.Mesh(bGeo, bMat);
+                    building.position.set(i, building.geometry.parameters.height/2, Math.random() * 400 - 200);
+                    mapGroup.add(building);
+                }
+            } else {
+                // Amedi Terrain (Cliff/Mountain Topology)
+                scene.background = new THREE.Color(0x94a3b8);
+                scene.fog = new THREE.FogExp2(0x94a3b8, 0.008);
+
+                const groundGeo = new THREE.PlaneGeometry(1000, 1000, 32, 32);
+                const groundMat = new THREE.MeshLambertMaterial({ color: 0x475569, wireframe: false });
+                const ground = new THREE.Mesh(groundGeo, groundMat);
+                ground.rotation.x = -Math.PI / 2;
+                ground.position.y = -5;
+                mapGroup.add(ground);
+            }
+
+            // Repair Shop Building (Shared)
+            repairShop = new THREE.Group();
+            const garageGeo = new THREE.BoxGeometry(20, 10, 20);
+            const garageMat = new THREE.MeshLambertMaterial({ color: 0x22c55e, transparent: true, opacity: 0.6 });
+            const garageMesh = new THREE.Mesh(garageGeo, garageMat);
+            garageMesh.position.set(0, 5, -50);
+            repairShop.add(garageMesh);
+            mapGroup.add(repairShop);
+
+            terrain = mapGroup;
+            scene.add(terrain);
+        }
+
+        function spawnVehicle(type) {
+            if (vehicle) scene.remove(vehicle);
+            vehicle = new THREE.Group();
+
+            // Procedural Car Mesh generation based on selection
+            let color = 0x38bdf8;
+            let scale = [2, 1, 4.5];
+
+            if (type.includes('patrol') || type.includes('lc300') || type.includes('escalade')) {
+                scale = [2.2, 1.8, 5]; // SUV dimensions
+                color = 0xffffff;
+            } else if (type.includes('gt-r') || type.includes('supra') || type.includes('corvette')) {
+                scale = [2, 0.8, 4.2]; // Sports car dimensions
+                color = 0xef4444;
+            }
+
+            const bodyGeo = new THREE.BoxGeometry(scale[0], scale[1], scale[2]);
+            const bodyMat = new THREE.MeshLambertMaterial({ color: color });
+            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            body.position.y = scale[1] / 2 + 0.5;
+            vehicle.add(body);
+
+            // Wheels
+            const wheelGeo = new THREE.CylinderGeometry(0.4, 0.4, 0.4, 16);
+            const wheelMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
+            const positions = [[-1, 0.4, 1.5], [1, 0.4, 1.5], [-1, 0.4, -1.5], [1, 0.4, -1.5]];
+            
+            positions.forEach(pos => {
+                const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+                wheel.rotation.z = Math.PI / 2;
+                wheel.position.set(...pos);
+                vehicle.add(wheel);
+            });
+
+            scene.add(vehicle);
+            vehicle.position.set(0, 0, 0);
+        }
+
+        function startGame() {
+            currentLocation = document.getElementById('location-select').value;
+            const carType = document.getElementById('car-select').value;
+
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('hud').style.display = 'flex';
+            document.getElementById('touch-controls').style.display = 'flex';
+
+            buildMap(currentLocation);
+            spawnVehicle(carType);
+
+            isGameRunning = true;
+            animate();
+        }
+
+        function updatePhysics() {
+            if (!isGameRunning || !vehicle) return;
+
+            // Acceleration & Braking
+            if (inputs.gas) speed = Math.min(speed + 0.02, 1.2);
+            else if (inputs.brake) speed = Math.max(speed - 0.04, -0.4);
+            else speed *= 0.98; // Friction
+
+            // Steering
+            if (inputs.left) steering = Math.min(steering + 0.05, 0.04);
+            else if (inputs.right) steering = Math.max(steering - 0.05, -0.04);
+            else steering *= 0.8;
+
+            if (Math.abs(speed) > 0.01) {
+                vehicle.rotation.y += steering * (speed > 0 ? 1 : -1);
+            }
+
+            vehicle.translateZ(speed);
+
+            // Camera Tracking (Chase Cam)
+            const relativeCameraOffset = new THREE.Vector3(0, 4, -10);
+            const cameraOffset = relativeCameraOffset.applyMatrix4(vehicle.matrixWorld);
+            camera.position.x = cameraOffset.x;
+            camera.position.y = cameraOffset.y;
+            camera.position.z = cameraOffset.z;
+            camera.lookAt(vehicle.position.x, vehicle.position.y + 1, vehicle.position.z);
+
+            // HUD Updates
+            document.getElementById('speedometer').innerHTML = `${Math.round(Math.abs(speed) * 160)} <span style="font-size: 14px;">KM/H</span>`;
+
+            // Repair Shop Distance Check (x: 0, z: -50)
+            const distToGarage = vehicle.position.distanceTo(new THREE.Vector3(0, 0, -50));
+            if (distToGarage < 15) {
+                document.getElementById('shop-prompt').style.display = 'block';
+            } else {
+                document.getElementById('shop-prompt').style.display = 'none';
+            }
+        }
+
+        function repairVehicle() {
+            health = 100;
+            document.getElementById('health-fill').style.width = '100%';
+            document.getElementById('health-fill').style.background = '#22c55e';
+        }
+
+        function setupTouchEvents() {
+            const bindTouch = (id, key) => {
+                const el = document.getElementById(id);
+                el.addEventListener('touchstart', (e) => { e.preventDefault(); inputs[key] = true; });
+                el.addEventListener('touchend', (e) => { e.preventDefault(); inputs[key] = false; });
+            };
+            bindTouch('btn-gas', 'gas');
+            bindTouch('btn-brake', 'brake');
+            bindTouch('btn-left', 'left');
+            bindTouch('btn-right', 'right');
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            if (!isGameRunning) return;
+            requestAnimationFrame(animate);
+            updatePhysics();
+            renderer.render(scene, camera);
+        }
+
+        window.onload = initEngine;
+    </script>
+</body>
+</html>
