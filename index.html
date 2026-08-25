@@ -112,7 +112,7 @@
 <body>
 
 <div class="container">
-    <h1>🧠 Shahlaw Arcade</h1>
+    <h1>🧠 Arcade Hub</h1>
     <p class="bio">Touch-Optimized Retro & Brain Puzzles</p>
 
     <div class="games-grid">
@@ -125,7 +125,7 @@
         <div class="game-card" onclick="openTower3D()">
             <i class="fa-solid fa-cubes" style="color: #38bdf8;"></i>
             <h4>3D Stack Tower</h4>
-            <span>Realistic Isometric</span>
+            <span>Isometric Stacker</span>
         </div>
 
         <div class="game-card" onclick="openSnakesLadders()">
@@ -137,19 +137,19 @@
         <div class="game-card" onclick="open2048()">
             <i class="fa-solid fa-hand-pointer" style="color: #f59e0b;"></i>
             <h4>2048 Touch Merge</h4>
-            <span>Swipe Direct Controls</span>
+            <span>Direct Touch Swiping</span>
         </div>
 
         <div class="game-card" onclick="openIQ()">
             <i class="fa-solid fa-brain" style="color: #a855f7;"></i>
             <h4>IQ Memory Test</h4>
-            <span>Sequence Recall</span>
+            <span>Sequence Pattern</span>
         </div>
 
         <div class="game-card" onclick="openSlidePuzzle()">
             <i class="fa-solid fa-hashtag" style="color: #10b981;"></i>
             <h4>15-Tile Slide</h4>
-            <span>Tap to Order</span>
+            <span>Tap to Shift</span>
         </div>
     </div>
 
@@ -189,11 +189,11 @@
     </div>
 </div>
 
-<!-- 2. REALISTIC 3D TOWER MODAL -->
+<!-- 2. ISOMETRIC 3D TOWER MODAL -->
 <div class="modal" id="tower3DModal">
     <div class="modal-content">
         <h3>Isometric 3D Tower</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Tap screen to stack block accurately!</p>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Tap screen to place block!</p>
         <canvas id="towerCanvas" width="260" height="260"></canvas>
         <button class="close-btn" onclick="closeTower3D()">Exit Game</button>
     </div>
@@ -215,7 +215,7 @@
 <div class="modal" id="m2048Modal">
     <div class="modal-content">
         <h3>2048 Touch Merge</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Swipe anywhere on grid to slide tiles!</p>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Swipe anywhere on the board to slide tiles!</p>
         <div class="grid-2048" id="g2048"></div>
         <button class="close-btn" onclick="closeModal('m2048Modal')">Exit Game</button>
     </div>
@@ -240,7 +240,7 @@
 <div class="modal" id="slideModal">
     <div class="modal-content">
         <h3>15-Tile Slide Puzzle</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Tap adjacent tiles to shift into empty spot!</p>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Tap adjacent tiles to shift into the empty space!</p>
         <div class="grid-slide" id="slideBoard"></div>
         <button class="close-btn" onclick="closeModal('slideModal')">Exit Game</button>
     </div>
@@ -273,7 +273,7 @@
     function updateNokia() {
         let head = {x: nSnake[0].x + ndx, y: nSnake[0].y + ndy};
         if (head.x < 0 || head.x >= 160 || head.y < 0 || head.y >= 160 || nSnake.some(s=>s.x===head.x&&s.y===head.y)) {
-            alert("💥 Crash! Final Score: " + nScore); openNokiaSnake(); return;
+            alert("💥 Crash! Score: " + nScore); openNokiaSnake(); return;
         }
         nSnake.unshift(head);
         if (head.x === nFood.x && head.y === nFood.y) { nScore += 10; document.getElementById('nokiaScore').innerText = nScore; spawnNokiaFood(); } else { nSnake.pop(); }
@@ -317,7 +317,7 @@
     tCanvas.addEventListener('pointerdown', () => {
         let prev = tBlocks[tBlocks.length - 1];
         let diff = tCur.x - prev.x;
-        if (Math.abs(diff) >= tCur.w) { alert("💥 Tower Collapsed! Height: " + tHeight); openTower3D(); return; }
+        if (Math.abs(diff) >= tCur.w) { alert("💥 Tower Collapsed! Score: " + tHeight); openTower3D(); return; }
         if (diff > 0) { tCur.w -= diff; } else { tCur.x = prev.x; tCur.w += diff; }
         tBlocks.push({...tCur}); tHeight++;
         if (tBlocks.length > 8) tBlocks.forEach(b => b.y += 18);
@@ -410,19 +410,19 @@
     function openIQ() { document.getElementById('iqModal').style.display = 'flex'; iqSeq = []; iqLvl = 0; nextIQ(); }
     function nextIQ() {
         userSeq = []; iqLvl++;
-        document.getElementById('iqStatus').innerText = `Round ${iqLvl}: Memorize!`;
+        document.getElementById('iqStatus').innerText = `Round ${iqLvl}: Memorize Pattern!`;
         iqSeq.push(Math.floor(Math.random()*4));
         let i = 0;
         let t = setInterval(() => {
             let b = document.getElementById('b' + iqSeq[i]); b.classList.add('active');
             setTimeout(() => b.classList.remove('active'), 300); i++;
-            if (i >= iqSeq.length) { clearInterval(t); document.getElementById('iqStatus').innerText = "Repeat Pattern!"; }
+            if (i >= iqSeq.length) { clearInterval(t); document.getElementById('iqStatus').innerText = "Your Turn: Repeat Pattern!"; }
         }, 550);
     }
     function pressIQ(n) {
         userSeq.push(n);
         let idx = userSeq.length - 1;
-        if (userSeq[idx] !== iqSeq[idx]) { alert(`🧠 Test Over! Sequence Level Reached: ${iqLvl}`); openIQ(); return; }
+        if (userSeq[idx] !== iqSeq[idx]) { alert(`🧠 Game Over! Level Reached: ${iqLvl}`); openIQ(); return; }
         if (userSeq.length === iqSeq.length) setTimeout(nextIQ, 500);
     }
 
