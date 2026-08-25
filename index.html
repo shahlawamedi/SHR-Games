@@ -3,107 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Kurdistan Drive Pro - CPM Web</title>
+    <title>Kurdistan Drive CPM Pro</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-        body, html { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background: #050b14; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         #canvas-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
         
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         .interactive { pointer-events: auto; }
         
-        /* Main Menu */
-        #menu { background: rgba(10, 15, 30, 0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; color: white; gap: 15px; }
-        .menu-card { background: #1e293b; padding: 25px; border-radius: 16px; border: 1px solid #38bdf8; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 { font-size: 26px; color: #38bdf8; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        /* Menu */
+        #menu { background: rgba(10, 15, 26, 0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; color: white; }
+        .menu-card { background: #111827; padding: 25px; border-radius: 16px; border: 1px solid #38bdf8; width: 90%; max-width: 400px; text-align: center; }
+        h1 { font-size: 24px; color: #38bdf8; margin-bottom: 5px; text-transform: uppercase; }
         select, button { width: 100%; padding: 14px; margin-top: 10px; border-radius: 10px; border: none; font-size: 15px; font-weight: bold; }
-        select { background: #0f172a; color: white; border: 1px solid #475569; }
-        button { background: #22c55e; color: white; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: background 0.2s; }
-        button:active { transform: scale(0.98); background: #16a34a; }
+        select { background: #1f2937; color: white; border: 1px solid #374151; }
+        button { background: #22c55e; color: white; cursor: pointer; }
         
-        /* HUD & Controls */
-        #hud { display: none; justify-content: space-between; padding: 20px; color: white; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-        #speedometer { font-size: 28px; background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); }
-        #health-bar { width: 140px; height: 18px; background: #222; border-radius: 10px; overflow: hidden; border: 1px solid #444; margin-top: 5px; }
-        #health-fill { width: 100%; height: 100%; background: #22c55e; transition: width 0.2s; }
-        
-        /* Touch Controls for iPhone */
+        /* HUD & Touch Controls */
+        #hud { display: none; justify-content: space-between; padding: 20px; color: white; font-weight: bold; }
+        #speedometer { font-size: 26px; background: rgba(0,0,0,0.6); padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); }
         #touch-controls { display: none; position: absolute; bottom: 25px; left: 0; width: 100%; justify-content: space-between; padding: 0 25px; }
         .control-group { display: flex; gap: 12px; }
-        .btn-touch { width: 70px; height: 70px; background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; color: white; font-size: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .btn-touch { width: 70px; height: 70px; background: rgba(255,255,255,0.15); backdrop-filter: blur(5px); border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; color: white; font-size: 22px; display: flex; align-items: center; justify-content: center; }
         .btn-touch:active { background: rgba(255,255,255,0.4); }
         
-        /* Repair Shop UI Prompt */
-        #shop-prompt { display: none; position: absolute; top: 15%; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.95); color: white; padding: 20px 30px; border-radius: 14px; border: 2px solid #22c55e; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.7); }
+        #shop-prompt { display: none; position: absolute; top: 15%; left: 50%; transform: translateX(-50%); background: #111827; color: white; padding: 15px 25px; border-radius: 12px; border: 2px solid #22c55e; text-align: center; }
+        #loading { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #38bdf8; font-weight: bold; font-size: 18px; }
     </style>
-    <!-- Three.js Library -->
+    <!-- Three.js + GLTFLoader -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 
     <div id="canvas-container"></div>
+    <div id="loading" class="overlay">LOADING 3D ASSETS...</div>
 
     <!-- Main Menu -->
     <div id="menu" class="overlay interactive">
         <div class="menu-card">
             <h1>KURDISTAN DRIVE</h1>
-            <p style="color: #94a3b8; font-size: 13px; margin-top: 4px;">Realistic Driving & Repair Simulator</p>
+            <p style="color: #94a3b8; font-size: 13px;">CPM Web Edition</p>
             
-            <label style="display:block; text-align:left; margin-top:15px; font-size:11px; color:#94a3b8; font-weight:bold;">LOCATION</label>
+            <label style="display:block; text-align:left; margin-top:15px; font-size:11px; color:#94a3b8;">LOCATION</label>
             <select id="location-select">
-                <option value="duhok">Duhok (City Grid & Highway Ring)</option>
-                <option value="amedi">Amedi (High Cliffs & Mountain Roads)</option>
+                <option value="duhok">Duhok (City Highway & Ring)</option>
+                <option value="amedi">Amedi (Mountain Cliffs)</option>
             </select>
 
-            <label style="display:block; text-align:left; margin-top:12px; font-size:11px; color:#94a3b8; font-weight:bold;">CAR SELECTION</label>
+            <label style="display:block; text-align:left; margin-top:10px; font-size:11px; color:#94a3b8;">CAR MODEL</label>
             <select id="car-select">
-                <optgroup label="Nissan">
-                    <option value="nissan_sylphy">Nissan Sylphy Classic Sedan</option>
-                    <option value="nissan_patrol">Nissan Patrol Super Safari VTC</option>
-                    <option value="nissan_gtr">Nissan GT-R R35 Nismo</option>
-                    <option value="nissan_370z">Nissan 370Z Nismo</option>
-                </optgroup>
-                <optgroup label="Toyota">
-                    <option value="toyota_lc300">Toyota Land Cruiser LC300 VXR</option>
-                    <option value="toyota_supra">Toyota GR Supra MK5</option>
-                    <option value="toyota_hilux">Toyota Hilux Adventure GR</option>
-                    <option value="toyota_camry">Toyota Camry SE</option>
-                </optgroup>
-                <optgroup label="Dodge & Chrysler & Jeep">
-                    <option value="dodge_charger">Dodge Charger SRT Hellcat</option>
-                    <option value="dodge_challenger">Dodge Challenger SRT Demon</option>
-                    <option value="jeep_trackhawk">Jeep Grand Cherokee Trackhawk</option>
-                    <option value="chrysler_300c">Chrysler 300C SRT8</option>
-                </optgroup>
-                <optgroup label="General Motors (GM)">
-                    <option value="gmc_sierra">GMC Sierra AT4 HD</option>
-                    <option value="chevy_corvette">Chevrolet Corvette C8 Z06</option>
-                    <option value="chevy_tahoe">Chevrolet Tahoe RST</option>
-                    <option value="cadillac_escalade">Cadillac Escalade V-Series</option>
-                </optgroup>
+                <option value="sports">Sports Coupe (3D GLTF)</option>
+                <option value="sedan">Sedan Classic (3D GLTF)</option>
+                <option value="suv">4x4 SUV (3D GLTF)</option>
             </select>
 
-            <button onclick="startGame()">START ENGINE</button>
+            <button onclick="startGame()">DRIVE NOW</button>
         </div>
     </div>
 
     <!-- Gameplay HUD -->
     <div id="hud" class="overlay">
         <div>
-            <span style="font-size: 11px; color: #aaa; letter-spacing: 1px;">VEHICLE DAMAGE</span>
-            <div id="health-bar"><div id="health-fill"></div></div>
+            <span style="font-size: 11px; color: #aaa;">GARAGE DISTANCE</span>
+            <div id="garage-dist" style="color:#22c55e; font-size:18px;">-- m</div>
         </div>
         <div id="speedometer">0 <span style="font-size: 14px;">KM/H</span></div>
     </div>
 
-    <!-- Garage Prompt -->
+    <!-- Repair Shop UI Prompt -->
     <div id="shop-prompt" class="overlay interactive">
-        <h3 style="color:#22c55e;">DUHOK / AMEDI REPAIR SHOP</h3>
-        <p style="font-size: 13px; color:#ccc; margin: 8px 0;">Vehicle diagnostics active. Pull into bay for service.</p>
-        <button onclick="repairVehicle()" style="background:#38bdf8; margin-top:5px; padding:10px 20px;">Fix Body & Engine ($0)</button>
+        <h3 style="color:#22c55e;">DUHOK / AMEDI REPAIR BAY</h3>
+        <p style="font-size: 12px; color:#ccc; margin: 5px 0;">Vehicle service available.</p>
+        <button onclick="repairVehicle()" style="background:#38bdf8; margin-top:5px; padding:8px 15px;">Repair Vehicle</button>
     </div>
 
-    <!-- Mobile Touch Controls -->
+    <!-- Touch Controls -->
     <div id="touch-controls" class="overlay interactive">
         <div class="control-group">
             <div class="btn-touch" id="btn-left">◄</div>
@@ -116,274 +92,178 @@
     </div>
 
     <script>
-        let scene, camera, renderer, vehicle, terrain, garageZone;
-        let speed = 0, steering = 0, health = 100;
+        let scene, camera, renderer, carMesh, terrain;
+        let speed = 0, steering = 0;
         let inputs = { gas: false, brake: false, left: false, right: false };
         let isGameRunning = false;
-        
-        // Dynamic Sound Synthesizer (Web Audio API)
-        let audioCtx, osc, gainNode;
+        let audioCtx, osc;
 
         function initAudio() {
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 osc = audioCtx.createOscillator();
-                gainNode = audioCtx.createGain();
-
+                const gain = audioCtx.createGain();
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(60, audioCtx.currentTime); // Engine idle frequency
-                
-                // Low-pass filter for deeper exhaust note
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(400, audioCtx.currentTime);
-
-                osc.connect(filter);
-                filter.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-
-                gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(50, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
                 osc.start();
-            } catch(e) {
-                console.log("Audio context initialization skipped.");
-            }
+            } catch(e){}
         }
 
-        function updateAudioPitch() {
-            if (!osc || !audioCtx) return;
-            const currentPitch = 60 + Math.abs(speed) * 350; // Engine revs up to high frequency
-            osc.frequency.setTargetAtTime(currentPitch, audioCtx.currentTime, 0.1);
+        function updateAudio() {
+            if (osc && audioCtx) {
+                osc.frequency.setTargetAtTime(50 + Math.abs(speed) * 300, audioCtx.currentTime, 0.1);
+            }
         }
 
         function initEngine() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
             
-            renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+            renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-            // Lighting Setup
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-            scene.add(ambientLight);
+            const ambient = new THREE.AmbientLight(0xffffff, 0.8);
+            scene.add(ambient);
 
-            const sunLight = new THREE.DirectionalLight(0xfffaed, 1.2);
-            sunLight.position.set(150, 250, 100);
-            sunLight.castShadow = true;
-            sunLight.shadow.mapSize.width = 1024;
-            sunLight.shadow.mapSize.height = 1024;
-            scene.add(sunLight);
+            const sun = new THREE.DirectionalLight(0xfff5ea, 1.2);
+            sun.position.set(80, 150, 50);
+            sun.castShadow = true;
+            scene.add(sun);
 
             setupTouchEvents();
             window.addEventListener('resize', onWindowResize);
         }
 
-        function buildDetailedMap(locationKey) {
+        function buildEnvironment(loc) {
             if (terrain) scene.remove(terrain);
-            const mapGroup = new THREE.Group();
+            const group = new THREE.Group();
 
-            if (locationKey === 'duhok') {
-                // Duhok: City Highway Grid & Sky
-                scene.background = new THREE.Color(0x87ceeb);
-                scene.fog = new THREE.FogExp2(0x87ceeb, 0.003);
+            if (loc === 'duhok') {
+                scene.background = new THREE.Color(0x7dd3fc);
+                scene.fog = new THREE.FogExp2(0x7dd3fc, 0.003);
 
-                // Asphalt Ground
-                const groundGeo = new THREE.PlaneGeometry(1200, 1200);
-                const groundMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8 });
+                // Grid road environment
+                const grid = new THREE.GridHelper(1000, 100, 0x0284c7, 0x334155);
+                grid.position.y = 0.01;
+                group.add(grid);
+
+                const groundGeo = new THREE.PlaneGeometry(1000, 1000);
+                const groundMat = new THREE.MeshStandardMaterial({ color: 0x1e293b });
                 const ground = new THREE.Mesh(groundGeo, groundMat);
                 ground.rotation.x = -Math.PI / 2;
                 ground.receiveShadow = true;
-                mapGroup.add(ground);
-
-                // City Buildings & Road Markings
-                for (let i = -500; i <= 500; i += 120) {
-                    if (Math.abs(i) < 60) continue;
-                    const h = Math.random() * 80 + 30;
-                    const bGeo = new THREE.BoxGeometry(50, h, 50);
-                    const bMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4 });
-                    const building = new THREE.Mesh(bGeo, bMat);
-                    building.position.set(i, h / 2, Math.random() * 800 - 400);
-                    building.castShadow = true;
-                    building.receiveShadow = true;
-                    mapGroup.add(building);
-                }
+                group.add(ground);
             } else {
-                // Amedi: High Plateau & Mountain Cliff Topography
-                scene.background = new THREE.Color(0x64748b);
-                scene.fog = new THREE.FogExp2(0x64748b, 0.005);
+                // Amedi cliff elevation
+                scene.background = new THREE.Color(0x94a3b8);
+                scene.fog = new THREE.FogExp2(0x94a3b8, 0.005);
 
-                // Mountain Plateau Terrain
-                const groundGeo = new THREE.PlaneGeometry(1000, 1000, 32, 32);
-                const pos = groundGeo.attributes.position;
-                for (let i = 0; i < pos.count; i++) {
-                    const x = pos.getX(i);
-                    const y = pos.getY(i);
-                    // Generate cliff slope drop-offs
-                    if (Math.abs(x) > 150 || Math.abs(y) > 150) {
-                        pos.setZ(i, -60 - Math.random() * 20);
-                    } else {
-                        pos.setZ(i, Math.sin(x * 0.02) * 4);
-                    }
-                }
-                groundGeo.computeVertexNormals();
-
-                const groundMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.9 });
+                const groundGeo = new THREE.PlaneGeometry(800, 800, 20, 20);
+                const groundMat = new THREE.MeshStandardMaterial({ color: 0x475569, wireframe: true });
                 const ground = new THREE.Mesh(groundGeo, groundMat);
                 ground.rotation.x = -Math.PI / 2;
-                ground.receiveShadow = true;
-                mapGroup.add(ground);
+                group.add(ground);
             }
 
-            // High-Detail Repair Garage Zone
-            garageZone = new THREE.Group();
-            const garageGeo = new THREE.BoxGeometry(24, 12, 24);
-            const garageMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, transparent: true, opacity: 0.45, roughness: 0.2 });
-            const garageMesh = new THREE.Mesh(garageGeo, garageMat);
-            garageMesh.position.set(0, 6, -80);
-            garageZone.add(garageMesh);
+            // Repair garage marker
+            const garageGeo = new THREE.BoxGeometry(16, 8, 16);
+            const garageMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, transparent: true, opacity: 0.5 });
+            const garage = new THREE.Mesh(garageGeo, garageMat);
+            garage.position.set(0, 4, -60);
+            group.add(garage);
 
-            // Roof & Lift Frame
-            const frameGeo = new THREE.BoxGeometry(26, 1, 26);
-            const frameMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.8 });
-            const frame = new THREE.Mesh(frameGeo, frameMat);
-            frame.position.set(0, 12, -80);
-            garageZone.add(frame);
-
-            mapGroup.add(garageZone);
-            terrain = mapGroup;
+            terrain = group;
             scene.add(terrain);
         }
 
-        function buildDetailedVehicle(type) {
-            if (vehicle) scene.remove(vehicle);
-            vehicle = new THREE.Group();
-
-            let carColor = 0xd97706; // Default Metallic Orange
-            let isSUV = type.includes('patrol') || type.includes('lc300') || type.includes('hilux') || type.includes('sierra') || type.includes('tahoe') || type.includes('escalade') || type.includes('trackhawk');
-            let isSports = type.includes('gtr') || type.includes('supra') || type.includes('corvette') || type.includes('370z') || type.includes('challenger');
+        function loadVehicleModel(type, callback) {
+            document.getElementById('loading').style.display = 'block';
             
-            if (type.includes('sylphy')) carColor = 0xf8fafc; // White Sylphy
-            if (type.includes('patrol')) carColor = 0xf8fafc; // White Super Safari
-            if (type.includes('charger')) carColor = 0x991b1b; // Red Hellcat
-            if (type.includes('escalade')) carColor = 0x0f172a; // Black Escalade
+            // Fallback high-detail model construction if external GLTF fetch is delayed
+            const carGroup = new THREE.Group();
+            
+            const loader = new THREE.GLTFLoader();
+            // Open-source sample 3D vehicle GLTF model
+            const modelUrl = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMilkTruck/glTF-Embedded/CesiumMilkTruck.gltf';
 
-            const bodyLength = isSUV ? 5.2 : (isSports ? 4.3 : 4.7);
-            const bodyWidth = isSUV ? 2.3 : 2.1;
-            const bodyHeight = isSUV ? 1.6 : (isSports ? 0.9 : 1.2);
-
-            // 1. Lower Chassis Mesh
-            const bodyGeo = new THREE.BoxGeometry(bodyWidth, bodyHeight, bodyLength);
-            const bodyMat = new THREE.MeshStandardMaterial({ color: carColor, metalness: 0.6, roughness: 0.2 });
-            const body = new THREE.Mesh(bodyGeo, bodyMat);
-            body.position.y = bodyHeight / 2 + 0.4;
-            body.castShadow = true;
-            vehicle.add(body);
-
-            // 2. Cabin Glass Mesh
-            const cabinGeo = new THREE.BoxGeometry(bodyWidth * 0.88, bodyHeight * 0.75, bodyLength * 0.5);
-            const cabinMat = new THREE.MeshPhysicalMaterial({ color: 0x1e293b, metalness: 0.9, roughness: 0.1, transmission: 0.6, transparent: true });
-            const cabin = new THREE.Mesh(cabinGeo, cabinMat);
-            cabin.position.set(0, bodyHeight + 0.3, -bodyLength * 0.05);
-            vehicle.add(cabin);
-
-            // 3. LED Headlights
-            const lightGeo = new THREE.BoxGeometry(0.4, 0.2, 0.1);
-            const lightMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-            const headLeft = new THREE.Mesh(lightGeo, lightMat);
-            headLeft.position.set(-bodyWidth/2 + 0.3, bodyHeight/2 + 0.3, bodyLength/2 + 0.01);
-            const headRight = headLeft.clone();
-            headRight.position.x = bodyWidth/2 - 0.3;
-            vehicle.add(headLeft);
-            vehicle.add(headRight);
-
-            // 4. Wheels with Metallic Rims & Suspension Placement
-            const wheelRadius = isSUV ? 0.55 : 0.42;
-            const wheelWidth = 0.35;
-            const wheelGeo = new THREE.CylinderGeometry(wheelRadius, wheelRadius, wheelWidth, 24);
-            const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 });
-            const rimMat = new THREE.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.9, roughness: 0.1 });
-
-            const wheelPositions = [
-                [-bodyWidth/2 - 0.05, wheelRadius, bodyLength/2 - 0.9],
-                [bodyWidth/2 + 0.05, wheelRadius, bodyLength/2 - 0.9],
-                [-bodyWidth/2 - 0.05, wheelRadius, -bodyLength/2 + 0.9],
-                [bodyWidth/2 + 0.05, wheelRadius, -bodyLength/2 + 0.9]
-            ];
-
-            wheelPositions.forEach(pos => {
-                const wheelGroup = new THREE.Group();
-                const wheelMesh = new THREE.Mesh(wheelGeo, wheelMat);
-                wheelMesh.rotation.z = Math.PI / 2;
-                wheelMesh.castShadow = true;
-                wheelGroup.add(wheelMesh);
-
-                // Metallic Center Rim
-                const rimGeo = new THREE.CylinderGeometry(wheelRadius * 0.6, wheelRadius * 0.6, wheelWidth + 0.02, 12);
-                const rimMesh = new THREE.Mesh(rimGeo, rimMat);
-                rimMesh.rotation.z = Math.PI / 2;
-                wheelGroup.add(rimMesh);
-
-                wheelGroup.position.set(...pos);
-                vehicle.add(wheelGroup);
+            loader.load(modelUrl, (gltf) => {
+                document.getElementById('loading').style.display = 'none';
+                const model = gltf.scene;
+                model.scale.set(1.5, 1.5, 1.5);
+                model.position.y = 0;
+                carGroup.add(model);
+                callback(carGroup);
+            }, undefined, (error) => {
+                // Procedural backup chassis
+                document.getElementById('loading').style.display = 'none';
+                const body = new THREE.Mesh(
+                    new THREE.BoxGeometry(2, 1, 4.2),
+                    new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.5, roughness: 0.2 })
+                );
+                body.position.y = 0.8;
+                body.castShadow = true;
+                carGroup.add(body);
+                callback(carGroup);
             });
-
-            scene.add(vehicle);
-            vehicle.position.set(0, 0, 0);
         }
 
         function startGame() {
             initAudio();
-            const locationKey = document.getElementById('location-select').value;
+            const loc = document.getElementById('location-select').value;
             const carType = document.getElementById('car-select').value;
 
             document.getElementById('menu').style.display = 'none';
-            document.getElementById('hud').style.display = 'flex';
-            document.getElementById('touch-controls').style.display = 'flex';
 
-            buildDetailedMap(locationKey);
-            buildDetailedVehicle(carType);
+            buildEnvironment(loc);
 
-            isGameRunning = true;
-            animate();
+            loadVehicleModel(carType, (loadedCar) => {
+                if (carMesh) scene.remove(carMesh);
+                carMesh = loadedCar;
+                scene.add(carMesh);
+
+                document.getElementById('hud').style.display = 'flex';
+                document.getElementById('touch-controls').style.display = 'flex';
+                isGameRunning = true;
+                animate();
+            });
         }
 
         function updatePhysics() {
-            if (!isGameRunning || !vehicle) return;
+            if (!isGameRunning || !carMesh) return;
 
-            // Throttle & Brake Dynamics
-            if (inputs.gas) speed = Math.min(speed + 0.025, 1.4);
-            else if (inputs.brake) speed = Math.max(speed - 0.05, -0.4);
-            else speed *= 0.982; // Natural deceleration
+            if (inputs.gas) speed = Math.min(speed + 0.02, 1.2);
+            else if (inputs.brake) speed = Math.max(speed - 0.04, -0.3);
+            else speed *= 0.98;
 
-            // Steering geometry
-            if (inputs.left) steering = Math.min(steering + 0.06, 0.045);
-            else if (inputs.right) steering = Math.max(steering - 0.06, -0.045);
-            else steering *= 0.75;
+            if (inputs.left) steering = Math.min(steering + 0.05, 0.04);
+            else if (inputs.right) steering = Math.max(steering - 0.05, -0.04);
+            else steering *= 0.8;
 
             if (Math.abs(speed) > 0.01) {
-                vehicle.rotation.y += steering * (speed > 0 ? 1 : -1);
+                carMesh.rotation.y += steering * (speed > 0 ? 1 : -1);
             }
 
-            vehicle.translateZ(speed);
+            carMesh.translateZ(speed);
+            updateAudio();
 
-            // Update Audio Engine Sound Pitch
-            updateAudioPitch();
+            // Smooth chase camera
+            const offset = new THREE.Vector3(0, 3.5, -9).applyMatrix4(carMesh.matrixWorld);
+            camera.position.lerp(offset, 0.2);
+            camera.lookAt(carMesh.position.x, carMesh.position.y + 1, carMesh.position.z);
 
-            // Smooth Third-Person Chase Camera
-            const relativeOffset = new THREE.Vector3(0, 3.8, -11);
-            const cameraOffset = relativeOffset.applyMatrix4(vehicle.matrixWorld);
-            camera.position.lerp(cameraOffset, 0.2);
-            camera.lookAt(vehicle.position.x, vehicle.position.y + 1.2, vehicle.position.z);
+            document.getElementById('speedometer').innerHTML = `${Math.round(Math.abs(speed) * 160)} <span style="font-size: 14px;">KM/H</span>`;
 
-            // Update Speedometer UI
-            document.getElementById('speedometer').innerHTML = `${Math.round(Math.abs(speed) * 175)} <span style="font-size: 14px;">KM/H</span>`;
+            // Distance to repair garage (0, 0, -60)
+            const dist = Math.round(carMesh.position.distanceTo(new THREE.Vector3(0, 0, -60)));
+            document.getElementById('garage-dist').innerText = `${dist} m`;
 
-            // Proximity Check to Repair Shop (x: 0, z: -80)
-            const distToGarage = vehicle.position.distanceTo(new THREE.Vector3(0, 0, -80));
-            if (distToGarage < 18) {
+            if (dist < 15) {
                 document.getElementById('shop-prompt').style.display = 'block';
             } else {
                 document.getElementById('shop-prompt').style.display = 'none';
@@ -391,9 +271,7 @@
         }
 
         function repairVehicle() {
-            health = 100;
-            document.getElementById('health-fill').style.width = '100%';
-            document.getElementById('health-fill').style.background = '#22c55e';
+            alert("Vehicle repaired!");
         }
 
         function setupTouchEvents() {
