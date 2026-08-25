@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Shahlaw Arcade | Touch & Retro Hub</title>
+    <title>Arcade Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-color: #0b132b;
-            --card-bg: rgba(28, 37, 65, 0.75);
-            --card-border: rgba(255, 255, 255, 0.12);
+            --card-bg: rgba(28, 37, 65, 0.85);
+            --card-border: rgba(255, 255, 255, 0.15);
             --accent: #38bdf8;
             --text-main: #ffffff;
             --text-sub: #94a3b8;
@@ -35,21 +35,15 @@
 
         .game-card {
             background: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: 16px; padding: 12px; text-align: center;
-            cursor: pointer; backdrop-filter: blur(10px); transition: transform 0.2s ease, border-color 0.2s ease;
+            border-radius: 16px; padding: 14px; text-align: center;
+            cursor: pointer; transition: transform 0.15s ease;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .game-card:active { transform: scale(0.96); }
+        .game-card:active { transform: scale(0.95); }
         .game-card i { font-size: 1.8rem; margin-bottom: 6px; }
         .game-card h4 { font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
         .game-card span { font-size: 0.7rem; color: var(--text-sub); margin-top: 2px; }
 
-        .back-btn {
-            background: transparent; color: var(--text-sub); border: 1px solid var(--card-border);
-            padding: 8px 20px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem;
-        }
-
-        /* Modals */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(11, 19, 43, 0.95); backdrop-filter: blur(12px);
@@ -62,113 +56,112 @@
             position: relative; max-height: 95vh; overflow-y: auto;
         }
 
-        .close-btn { background: transparent; color: var(--text-sub); border: 1px solid var(--card-border); padding: 8px 20px; border-radius: 20px; cursor: pointer; margin-top: 12px; font-size: 0.8rem; }
+        .close-btn { 
+            background: transparent; color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); 
+            padding: 8px 24px; border-radius: 20px; cursor: pointer; margin-top: 14px; font-size: 0.85rem; font-weight: bold;
+        }
 
-        /* --- AUTHENTIC NOKIA 3310 CHASSIS --- */
+        /* --- NOKIA 3310 HARDWARE --- */
         .nokia-3310-shell {
-            background: linear-gradient(180deg, #2b3a4a 0%, #17212b 100%);
-            border: 3px solid #0f172a; border-radius: 36px 36px 48px 48px;
-            padding: 16px 14px 20px 14px; width: 250px; margin: 6px auto;
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.2), 0 10px 25px rgba(0,0,0,0.6);
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border: 4px solid #334155; border-radius: 36px 36px 48px 48px;
+            padding: 16px 14px 20px 14px; width: 260px; margin: 0 auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
         }
         .nokia-screen-frame {
-            background: #7d8c7c; border: 4px solid #111827; border-radius: 12px;
-            padding: 6px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); margin-bottom: 12px;
+            background: #9bbc0f; border: 4px solid #0f172a; border-radius: 8px;
+            padding: 4px; box-shadow: inset 0 0 6px rgba(0,0,0,0.4); margin-bottom: 12px;
         }
-        .nokia-header { font-family: monospace; font-size: 0.65rem; color: #0f380f; display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 4px; }
-        #nokiaCanvas { background: #9bbc0f; display: block; margin: 0 auto; border: 1px solid #8bac0f; }
+        .nokia-header { font-family: monospace; font-size: 0.65rem; color: #0f380f; display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 2px; }
+        #nokiaCanvas { background: #9bbc0f; display: block; margin: 0 auto; }
         
-        /* Original 3310 Keypad Controls */
-        .nokia-nav-cluster { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 4px; }
-        .nokia-nav-btn { background: linear-gradient(180deg, #475569, #334155); color: #fff; border: 1px solid #0f172a; border-radius: 14px; height: 32px; width: 65px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
-        .nokia-navi-key { background: linear-gradient(180deg, #38bdf8, #0284c7); border-radius: 50%; width: 55px; height: 35px; border: 1px solid #0284c7; color: white; font-weight: bold; font-size: 0.8rem; }
+        .nokia-nav-cluster { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .nokia-btn-side { background: linear-gradient(180deg, #475569, #1e293b); color: #fff; border: 1px solid #64748b; border-radius: 12px; height: 32px; width: 60px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+        .nokia-btn-center { background: linear-gradient(180deg, #38bdf8, #0284c7); border-radius: 50%; width: 60px; height: 36px; border: 1px solid #7dd3fc; color: white; font-weight: bold; font-size: 0.8rem; }
         
         .nokia-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-        .n-key { background: linear-gradient(180deg, #334155, #1e293b); color: #e2e8f0; border: 1px solid #0f172a; border-radius: 10px; padding: 6px 0; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+        .n-key { background: linear-gradient(180deg, #334155, #0f172a); color: #f8fafc; border: 1px solid #475569; border-radius: 10px; padding: 8px 0; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
         .n-key:active { background: #38bdf8; color: #000; }
 
         /* --- 2048 TOUCH BOARD --- */
-        .grid-2048 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; touch-action: none; }
-        .cell-2048 { aspect-ratio: 1; background: #1c2541; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.1rem; color: #fff; }
+        .grid-2048 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; touch-action: none; width: 100%; aspect-ratio: 1; }
+        .cell-2048 { aspect-ratio: 1; background: #1c2541; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.2rem; color: #fff; }
 
-        /* --- 15-TILE SLIDE BOARD --- */
-        .grid-slide { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; }
-        .cell-slide { aspect-ratio: 1; background: #38bdf8; color: #0b132b; border-radius: 6px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1rem; cursor: pointer; }
-        .cell-slide.empty { background: transparent; border: 1px dashed var(--card-border); }
+        /* --- SLIDE PUZZLE BOARD --- */
+        .grid-slide { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; aspect-ratio: 1; }
+        .cell-slide { aspect-ratio: 1; background: #38bdf8; color: #0b132b; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
+        .cell-slide.empty { background: transparent; border: 1px dashed var(--card-border); cursor: default; }
 
         /* --- SNAKES & LADDERS --- */
         .sl-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #0b132b; padding: 6px; border-radius: 12px; margin: 12px 0; max-height: 220px; overflow-y: auto; }
-        .sl-cell { aspect-ratio: 1; background: #222e50; font-size: 0.55rem; color: #64748b; display: flex; justify-content: center; align-items: center; border-radius: 4px; font-weight: bold; }
+        .sl-cell { aspect-ratio: 1; background: #222e50; font-size: 0.55rem; color: #64748b; display: flex; justify-content: center; align-items: center; border-radius: 3px; font-weight: bold; }
         .dice-box { width: 44px; height: 44px; background: #fff; border-radius: 10px; margin: 8px auto; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; color: #0f172a; font-weight: bold; }
 
         /* --- IQ MEMORY GRID --- */
-        .iq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 12px 0; }
-        .iq-box { aspect-ratio: 1; border-radius: 16px; opacity: 0.35; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
-        .iq-box.active { opacity: 1; transform: scale(0.96); }
+        .iq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 12px 0; aspect-ratio: 1; }
+        .iq-box { border-radius: 16px; opacity: 0.3; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+        .iq-box.active { opacity: 1; transform: scale(0.96); box-shadow: 0 0 15px currentColor; }
 
-        #towerCanvas { background: #0b132b; border-radius: 12px; margin: 10px auto; display: block; border: 1px solid var(--card-border); }
+        #towerCanvas { background: #0b132b; border-radius: 12px; margin: 10px auto; display: block; border: 1px solid var(--card-border); cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🧠 Arcade Hub</h1>
-    <p class="bio">Touch-Optimized Retro & Brain Puzzles</p>
+    <h1> Arcade Hub</h1>
+    <p class="bio">Touch & Retro Arcade Games</p>
 
     <div class="games-grid">
-        <div class="game-card" onclick="openNokiaSnake()">
+        <div class="game-card" onclick="openGame('nokiaModal', initNokia)">
             <i class="fa-solid fa-mobile-screen-button" style="color: #8bac0f;"></i>
             <h4>Nokia 3310 Snake</h4>
-            <span>Original Keypad</span>
+            <span>Classic Keypad</span>
         </div>
 
-        <div class="game-card" onclick="openTower3D()">
+        <div class="game-card" onclick="openGame('towerModal', initTower)">
             <i class="fa-solid fa-cubes" style="color: #38bdf8;"></i>
             <h4>3D Stack Tower</h4>
-            <span>Isometric Stacker</span>
+            <span>Tap to Stack</span>
         </div>
 
-        <div class="game-card" onclick="openSnakesLadders()">
+        <div class="game-card" onclick="openGame('snakesModal', initSL)">
             <i class="fa-solid fa-dice" style="color: #ec4899;"></i>
             <h4>Snakes & Ladders</h4>
-            <span>Roll vs AI Bot</span>
+            <span>Board vs AI</span>
         </div>
 
-        <div class="game-card" onclick="open2048()">
+        <div class="game-card" onclick="openGame('m2048Modal', init2048)">
             <i class="fa-solid fa-hand-pointer" style="color: #f59e0b;"></i>
             <h4>2048 Touch Merge</h4>
-            <span>Direct Touch Swiping</span>
+            <span>Full Touch Swipe</span>
         </div>
 
-        <div class="game-card" onclick="openIQ()">
+        <div class="game-card" onclick="openGame('iqModal', initIQ)">
             <i class="fa-solid fa-brain" style="color: #a855f7;"></i>
             <h4>IQ Memory Test</h4>
-            <span>Sequence Pattern</span>
+            <span>Pattern Recall</span>
         </div>
 
-        <div class="game-card" onclick="openSlidePuzzle()">
+        <div class="game-card" onclick="openGame('slideModal', initSlide)">
             <i class="fa-solid fa-hashtag" style="color: #10b981;"></i>
             <h4>15-Tile Slide</h4>
             <span>Tap to Shift</span>
         </div>
     </div>
-
-    <button class="back-btn" onclick="window.location.href='index.html'"><i class="fa-solid fa-arrow-left"></i> Return to Main Hub</button>
 </div>
 
 <!-- 1. NOKIA 3310 MODAL -->
 <div class="modal" id="nokiaModal">
     <div class="modal-content">
-        <h3>Nokia 3310 Arcade</h3>
         <div class="nokia-3310-shell">
             <div class="nokia-screen-frame">
-                <div class="nokia-header"><span>SNAKE</span><span id="nokiaScore">00</span></div>
-                <canvas id="nokiaCanvas" width="160" height="160"></canvas>
+                <div class="nokia-header"><span>SNAKE</span><span id="nokiaScore">SCORE: 0</span></div>
+                <canvas id="nokiaCanvas" width="160" height="140"></canvas>
             </div>
             <div class="nokia-nav-cluster">
-                <button class="nokia-nav-btn" onclick="setNokiaDir(0,-1)">C</button>
-                <button class="nokia-navi-key">NAV</button>
-                <button class="nokia-nav-btn" onclick="setNokiaDir(0,1)">▼▲</button>
+                <button class="nokia-btn-side" onclick="setNokiaDir(0,-1)">C</button>
+                <button class="nokia-btn-center">NAV</button>
+                <button class="nokia-btn-side" onclick="setNokiaDir(0,1)">▼▲</button>
             </div>
             <div class="nokia-keypad">
                 <button class="n-key">1</button>
@@ -185,29 +178,29 @@
                 <button class="n-key">#</button>
             </div>
         </div>
-        <button class="close-btn" onclick="closeNokia()">Exit Game</button>
+        <button class="close-btn" onclick="closeGame('nokiaModal', stopNokia)">Close Game</button>
     </div>
 </div>
 
-<!-- 2. ISOMETRIC 3D TOWER MODAL -->
-<div class="modal" id="tower3DModal">
+<!-- 2. 3D TOWER MODAL -->
+<div class="modal" id="towerModal">
     <div class="modal-content">
-        <h3>Isometric 3D Tower</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Tap screen to place block!</p>
+        <h3>3D Stack Tower</h3>
+        <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 8px;">Tap anywhere to drop the moving block!</p>
         <canvas id="towerCanvas" width="260" height="260"></canvas>
-        <button class="close-btn" onclick="closeTower3D()">Exit Game</button>
+        <button class="close-btn" onclick="closeGame('towerModal', stopTower)">Close Game</button>
     </div>
 </div>
 
 <!-- 3. SNAKES & LADDERS MODAL -->
 <div class="modal" id="snakesModal">
     <div class="modal-content">
-        <h3>Snakes & Ladders AI</h3>
-        <p id="slStatus" style="font-size: 0.8rem; color: var(--accent);">You: Tile 1 | AI Bot: Tile 1</p>
+        <h3>Snakes & Ladders</h3>
+        <p id="slStatus" style="font-size: 0.8rem; color: var(--accent); margin-bottom:6px;">Your Turn! Roll the dice.</p>
         <div class="sl-board" id="slBoard"></div>
         <div class="dice-box" id="diceDisplay">🎲</div>
-        <button class="game-card" onclick="rollSLDice()" style="width:100%; flex-direction:row; gap:8px;"><i class="fa-solid fa-dice"></i> Roll Dice</button>
-        <button class="close-btn" onclick="closeModal('snakesModal')">Exit Game</button>
+        <button class="game-card" onclick="rollSLDice()" style="width:100%; flex-direction:row; gap:8px; margin-top:8px;"><i class="fa-solid fa-dice"></i> Roll Dice</button>
+        <button class="close-btn" onclick="closeGame('snakesModal')">Close Game</button>
     </div>
 </div>
 
@@ -215,239 +208,331 @@
 <div class="modal" id="m2048Modal">
     <div class="modal-content">
         <h3>2048 Touch Merge</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Swipe anywhere on the board to slide tiles!</p>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Swipe Up, Down, Left, or Right to slide!</p>
         <div class="grid-2048" id="g2048"></div>
-        <button class="close-btn" onclick="closeModal('m2048Modal')">Exit Game</button>
+        <button class="close-btn" onclick="closeGame('m2048Modal')">Close Game</button>
     </div>
 </div>
 
-<!-- 5. IQ MEMORY TEST MODAL -->
+<!-- 5. IQ MEMORY MODAL -->
 <div class="modal" id="iqModal">
     <div class="modal-content">
-        <h3>IQ Pattern Recall</h3>
-        <p id="iqStatus" style="font-size: 0.8rem; color: var(--text-sub);">Memorize sequence...</p>
+        <h3>IQ Memory Test</h3>
+        <p id="iqStatus" style="font-size: 0.8rem; color: var(--text-sub); margin-bottom:8px;">Watch the pattern...</p>
         <div class="iq-grid">
-            <div class="iq-box" id="b0" style="background:#ef4444;" onclick="pressIQ(0)"></div>
-            <div class="iq-box" id="b1" style="background:#3b82f6;" onclick="pressIQ(1)"></div>
-            <div class="iq-box" id="b2" style="background:#10b981;" onclick="pressIQ(2)"></div>
-            <div class="iq-box" id="b3" style="background:#f59e0b;" onclick="pressIQ(3)"></div>
+            <div class="iq-box" id="b0" style="background:#ef4444; color:#ef4444;" onclick="pressIQ(0)"></div>
+            <div class="iq-box" id="b1" style="background:#3b82f6; color:#3b82f6;" onclick="pressIQ(1)"></div>
+            <div class="iq-box" id="b2" style="background:#10b981; color:#10b981;" onclick="pressIQ(2)"></div>
+            <div class="iq-box" id="b3" style="background:#f59e0b; color:#f59e0b;" onclick="pressIQ(3)"></div>
         </div>
-        <button class="close-btn" onclick="closeModal('iqModal')">Exit Game</button>
+        <button class="close-btn" onclick="closeGame('iqModal')">Close Game</button>
     </div>
 </div>
 
 <!-- 6. 15-TILE SLIDE MODAL -->
 <div class="modal" id="slideModal">
     <div class="modal-content">
-        <h3>15-Tile Slide Puzzle</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Tap adjacent tiles to shift into the empty space!</p>
+        <h3>15-Tile Slide</h3>
+        <p style="font-size: 0.8rem; color: var(--text-sub);">Tap adjacent tiles to shift into the empty slot!</p>
         <div class="grid-slide" id="slideBoard"></div>
-        <button class="close-btn" onclick="closeModal('slideModal')">Exit Game</button>
+        <button class="close-btn" onclick="closeGame('slideModal')">Close Game</button>
     </div>
 </div>
 
 <script>
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    // --- UTILITY ENGINE ---
+    function openGame(id, initFunc) {
+        document.getElementById(id).style.display = 'flex';
+        if (initFunc) initFunc();
+    }
+    function closeGame(id, stopFunc) {
+        document.getElementById(id).style.display = 'none';
+        if (stopFunc) stopFunc();
+    }
 
-    /* --- GAME 1: RETRO NOKIA SNAKE --- */
+    // --- GAME 1: NOKIA SNAKE ---
     let nCanvas = document.getElementById("nokiaCanvas"), nCtx = nCanvas.getContext("2d");
-    let nSnake, nFood, ndx = 10, ndy = 0, nLoop, nScore = 0;
+    let nSnake, nFood, ndx, ndy, nLoop, nScore;
 
-    function openNokiaSnake() {
-        document.getElementById('nokiaModal').style.display = 'flex';
-        nSnake = [{x: 50, y: 50}, {x: 40, y: 50}, {x: 30, y: 50}];
+    function initNokia() {
+        nSnake = [{x: 80, y: 70}, {x: 70, y: 70}, {x: 60, y: 70}];
         ndx = 10; ndy = 0; nScore = 0;
-        document.getElementById('nokiaScore').innerText = "00";
+        document.getElementById('nokiaScore').innerText = "SCORE: 0";
         spawnNokiaFood();
         clearInterval(nLoop);
-        nLoop = setInterval(updateNokia, 130);
+        nLoop = setInterval(updateNokia, 120);
     }
-    function closeNokia() { clearInterval(nLoop); closeModal('nokiaModal'); }
-    function spawnNokiaFood() { nFood = {x: Math.floor(Math.random()*16)*10, y: Math.floor(Math.random()*16)*10}; }
+    function stopNokia() { clearInterval(nLoop); }
+    function spawnNokiaFood() {
+        nFood = {
+            x: Math.floor(Math.random() * 16) * 10,
+            y: Math.floor(Math.random() * 14) * 10
+        };
+    }
     function setNokiaDir(x, y) {
         if (x === 1 && ndx === 0) { ndx = 10; ndy = 0; }
-        if (x === -1 && ndx === 0) { ndx = -10; ndy = 0; }
-        if (y === -1 && ndy === 0) { ndx = 0; ndy = -10; }
-        if (y === 1 && ndy === 0) { ndx = 0; ndy = 10; }
+        else if (x === -1 && ndx === 0) { ndx = -10; ndy = 0; }
+        else if (y === -1 && ndy === 0) { ndx = 0; ndy = -10; }
+        else if (y === 1 && ndy === 0) { ndx = 0; ndy = 10; }
     }
     function updateNokia() {
         let head = {x: nSnake[0].x + ndx, y: nSnake[0].y + ndy};
-        if (head.x < 0 || head.x >= 160 || head.y < 0 || head.y >= 160 || nSnake.some(s=>s.x===head.x&&s.y===head.y)) {
-            alert("💥 Crash! Score: " + nScore); openNokiaSnake(); return;
+        if (head.x < 0 || head.x >= 160 || head.y < 0 || head.y >= 140 || nSnake.some(s => s.x === head.x && s.y === head.y)) {
+            alert("Game Over! Score: " + nScore);
+            initNokia();
+            return;
         }
         nSnake.unshift(head);
-        if (head.x === nFood.x && head.y === nFood.y) { nScore += 10; document.getElementById('nokiaScore').innerText = nScore; spawnNokiaFood(); } else { nSnake.pop(); }
-        nCtx.fillStyle = "#9bbc0f"; nCtx.fillRect(0,0,160,160);
+        if (head.x === nFood.x && head.y === nFood.y) {
+            nScore += 10;
+            document.getElementById('nokiaScore').innerText = "SCORE: " + nScore;
+            spawnNokiaFood();
+        } else {
+            nSnake.pop();
+        }
+        nCtx.fillStyle = "#9bbc0f"; nCtx.fillRect(0, 0, 160, 140);
         nCtx.fillStyle = "#0f380f";
-        nCtx.fillRect(nFood.x+1, nFood.y+1, 8, 8);
-        nSnake.forEach(s => nCtx.fillRect(s.x+1, s.y+1, 8, 8));
+        nCtx.fillRect(nFood.x + 1, nFood.y + 1, 8, 8);
+        nSnake.forEach(s => nCtx.fillRect(s.x + 1, s.y + 1, 8, 8));
     }
 
-    /* --- GAME 2: ISOMETRIC 3D TOWER --- */
+    // --- GAME 2: 3D STACK TOWER ---
     let tCanvas = document.getElementById("towerCanvas"), tCtx = tCanvas.getContext("2d");
-    let tBlocks = [], tCur, tSpeed = 2, tLoop, tHeight = 0;
+    let tBlocks, tCur, tSpeed, tLoop, tScore;
 
-    function openTower3D() {
-        document.getElementById('tower3DModal').style.display = 'flex';
-        tHeight = 0; tBlocks = [{x: 80, y: 210, w: 100, h: 18, color: "#38bdf8"}];
+    function initTower() {
+        tScore = 0; tSpeed = 2.5;
+        tBlocks = [{x: 80, y: 220, w: 100, h: 20, col: "#38bdf8"}];
         spawnTowerBlock();
         clearInterval(tLoop);
-        tLoop = setInterval(drawTower3D, 20);
+        tLoop = setInterval(drawTower, 20);
     }
-    function closeTower3D() { clearInterval(tLoop); closeModal('tower3DModal'); }
+    function stopTower() { clearInterval(tLoop); }
     function spawnTowerBlock() {
         let prev = tBlocks[tBlocks.length - 1];
-        tCur = {x: 0, y: prev.y - 18, w: prev.w, h: 18, color: `hsl(${(tHeight * 30) % 360}, 80%, 60%)`};
+        let hue = (tScore * 25) % 360;
+        tCur = {x: 0, y: prev.y - 20, w: prev.w, h: 20, col: `hsl(${hue}, 80%, 60%)`};
         tSpeed = Math.abs(tSpeed);
     }
-    function drawTower3D() {
+    function drawTower() {
         tCur.x += tSpeed;
         if (tCur.x <= 0 || tCur.x + tCur.w >= 260) tSpeed *= -1;
-        tCtx.fillStyle = "#0b132b"; tCtx.fillRect(0,0,260,260);
-        tBlocks.forEach(b => drawIsoBlock(b.x, b.y, b.w, b.h, b.color));
-        drawIsoBlock(tCur.x, tCur.y, tCur.w, tCur.h, tCur.color);
-        tCtx.fillStyle = "#ffffff"; tCtx.font = "bold 12px sans-serif";
-        tCtx.fillText("Stacked: " + tHeight + " Floors", 10, 20);
+        tCtx.fillStyle = "#0b132b"; tCtx.fillRect(0, 0, 260, 260);
+        tBlocks.forEach(b => drawBlock(b));
+        drawBlock(tCur);
+        tCtx.fillStyle = "#fff"; tCtx.font = "bold 14px sans-serif";
+        tCtx.fillText("Score: " + tScore, 10, 25);
     }
-    function drawIsoBlock(x, y, w, h, col) {
-        tCtx.fillStyle = col; tCtx.fillRect(x, y, w, h);
-        tCtx.fillStyle = "rgba(0,0,0,0.3)"; tCtx.fillRect(x, y + h - 3, w, 3);
-        tCtx.fillStyle = "rgba(255,255,255,0.25)"; tCtx.fillRect(x, y, w, 3);
+    function drawBlock(b) {
+        tCtx.fillStyle = b.col;
+        tCtx.fillRect(b.x, b.y, b.w, b.h);
+        tCtx.fillStyle = "rgba(0,0,0,0.25)";
+        tCtx.fillRect(b.x, b.y + b.h - 4, b.w, 4);
     }
-    tCanvas.addEventListener('pointerdown', () => {
+    tCanvas.onclick = function() {
         let prev = tBlocks[tBlocks.length - 1];
         let diff = tCur.x - prev.x;
-        if (Math.abs(diff) >= tCur.w) { alert("💥 Tower Collapsed! Score: " + tHeight); openTower3D(); return; }
-        if (diff > 0) { tCur.w -= diff; } else { tCur.x = prev.x; tCur.w += diff; }
-        tBlocks.push({...tCur}); tHeight++;
-        if (tBlocks.length > 8) tBlocks.forEach(b => b.y += 18);
+        if (Math.abs(diff) >= tCur.w) {
+            alert("Tower Collapsed! Final Score: " + tScore);
+            initTower();
+            return;
+        }
+        if (diff > 0) {
+            tCur.w -= diff;
+        } else {
+            tCur.x = prev.x;
+            tCur.w += diff;
+        }
+        tBlocks.push({...tCur});
+        tScore++;
+        if (tBlocks.length > 8) {
+            tBlocks.forEach(b => b.y += 20);
+        }
         spawnTowerBlock();
-    });
+    };
 
-    /* --- GAME 3: SNAKES & LADDERS --- */
+    // --- GAME 3: SNAKES & LADDERS ---
     let pPos = 1, bPos = 1, slTurn = true;
-    function openSnakesLadders() {
-        document.getElementById('snakesModal').style.display = 'flex';
-        pPos = 1; bPos = 1; slTurn = true; renderSLBoard();
+    const snakesLaddersMap = { 16: 6, 47: 26, 49: 11, 56: 53, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 98: 78, 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
+
+    function initSL() {
+        pPos = 1; bPos = 1; slTurn = true;
+        renderSL();
     }
-    function renderSLBoard() {
+    function renderSL() {
         let board = document.getElementById('slBoard'); board.innerHTML = '';
         document.getElementById('slStatus').innerText = `🔴 You: Tile ${pPos} | 🤖 AI: Tile ${bPos}`;
         for (let i = 100; i >= 1; i--) {
             let cell = document.createElement('div'); cell.className = 'sl-cell';
-            cell.innerText = pPos===i ? '🔴' : (bPos===i ? '🤖' : i);
+            let mark = '';
+            if (pPos === i && bPos === i) mark = '🔴🤖';
+            else if (pPos === i) mark = '🔴';
+            else if (bPos === i) mark = '🤖';
+            else mark = i;
+            cell.innerText = mark;
             board.appendChild(cell);
         }
     }
     function rollSLDice() {
         if (!slTurn) return;
-        let roll = Math.floor(Math.random()*6) + 1;
+        let roll = Math.floor(Math.random() * 6) + 1;
         document.getElementById('diceDisplay').innerText = roll;
-        pPos = Math.min(100, pPos + roll);
-        if (pPos === 100) { renderSLBoard(); alert("🎉 You Beat AI!"); return; }
-        slTurn = false; renderSLBoard();
+        pPos += roll;
+        if (pPos >= 100) { pPos = 100; renderSL(); alert("🎉 Victory! You won!"); initSL(); return; }
+        if (snakesLaddersMap[pPos]) pPos = snakesLaddersMap[pPos];
+        renderSL();
+        slTurn = false;
         setTimeout(() => {
-            bPos = Math.min(100, bPos + Math.floor(Math.random()*6) + 1);
-            slTurn = true; renderSLBoard();
-        }, 600);
+            let bRoll = Math.floor(Math.random() * 6) + 1;
+            bPos += bRoll;
+            if (bPos >= 100) { bPos = 100; renderSL(); alert("🤖 AI Won! Better luck next time."); initSL(); return; }
+            if (snakesLaddersMap[bPos]) bPos = snakesLaddersMap[bPos];
+            slTurn = true;
+            renderSL();
+        }, 700);
     }
 
-    /* --- GAME 4: REAL SWIPE-CONTROLLED 2048 --- */
-    let b2048 = Array(16).fill(0), touchStartX = 0, touchStartY = 0;
-    function open2048() {
-        document.getElementById('m2048Modal').style.display = 'flex';
-        b2048 = Array(16).fill(0); add2048Tile(); add2048Tile(); render2048Board();
+    // --- GAME 4: TOUCH 2048 MERGE ---
+    let grid2048 = Array(16).fill(0), tSX = 0, tSY = 0;
+
+    function init2048() {
+        grid2048 = Array(16).fill(0);
+        addTile2048(); addTile2048();
+        render2048();
     }
-    function add2048Tile() {
-        let empty = b2048.map((v, i) => v === 0 ? i : null).filter(v => v !== null);
-        if (empty.length) b2048[empty[Math.floor(Math.random()*empty.length)]] = Math.random() > 0.1 ? 2 : 4;
+    function addTile2048() {
+        let empties = grid2048.map((v, i) => v === 0 ? i : null).filter(v => v !== null);
+        if (empties.length) {
+            grid2048[empties[Math.floor(Math.random() * empties.length)]] = Math.random() > 0.1 ? 2 : 4;
+        }
     }
-    function render2048Board() {
-        let g = document.getElementById('g2048'); g.innerHTML = '';
-        b2048.forEach(v => {
-            let c = document.createElement('div'); c.className = 'cell-2048';
-            c.innerText = v ? v : '';
-            c.style.background = v ? `hsl(${Math.log2(v)*32}, 75%, 45%)` : '#1c2541';
-            g.appendChild(c);
+    function render2048() {
+        let container = document.getElementById('g2048'); container.innerHTML = '';
+        grid2048.forEach(val => {
+            let cell = document.createElement('div'); cell.className = 'cell-2048';
+            cell.innerText = val ? val : '';
+            if (val) {
+                let bgHue = Math.min(360, Math.log2(val) * 35);
+                cell.style.background = `hsl(${bgHue}, 80%, 45%)`;
+            }
+            container.appendChild(cell);
         });
     }
-    let el2048 = document.getElementById('g2048');
-    el2048.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; }, false);
-    el2048.addEventListener('touchend', e => {
-        let dx = e.changedTouches[0].clientX - touchStartX;
-        let dy = e.changedTouches[0].clientY - touchStartY;
-        if (Math.abs(dx) > Math.abs(dy)) { slide2048(dx > 0 ? 'R' : 'L'); }
-        else { slide2048(dy > 0 ? 'D' : 'U'); }
+
+    let gBox = document.getElementById('g2048');
+    gBox.addEventListener('touchstart', e => {
+        tSX = e.touches[0].clientX;
+        tSY = e.touches[0].clientY;
+    }, false);
+    gBox.addEventListener('touchend', e => {
+        let dX = e.changedTouches[0].clientX - tSX;
+        let dY = e.changedTouches[0].clientY - tSY;
+        if (Math.abs(dX) > 30 || Math.abs(dY) > 30) {
+            if (Math.abs(dX) > Math.abs(dY)) slide2048(dX > 0 ? 'R' : 'L');
+            else slide2048(dY > 0 ? 'D' : 'U');
+        }
     }, false);
 
     function slide2048(dir) {
         let moved = false;
         for (let i = 0; i < 4; i++) {
-            let row = [];
+            let line = [];
             for (let j = 0; j < 4; j++) {
-                let idx = (dir==='L'||dir==='R') ? i*4+j : j*4+i;
-                row.push(b2048[idx]);
+                let idx = (dir === 'L' || dir === 'R') ? (i * 4 + j) : (j * 4 + i);
+                line.push(grid2048[idx]);
             }
-            if (dir==='R'||dir==='D') row.reverse();
-            let filtered = row.filter(v => v);
+            if (dir === 'R' || dir === 'D') line.reverse();
+            let filtered = line.filter(v => v !== 0);
             for (let k = 0; k < filtered.length - 1; k++) {
-                if (filtered[k] === filtered[k+1]) { filtered[k] *= 2; filtered[k+1] = 0; moved = true; }
+                if (filtered[k] === filtered[k + 1]) {
+                    filtered[k] *= 2;
+                    filtered[k + 1] = 0;
+                    moved = true;
+                }
             }
-            filtered = filtered.filter(v => v);
+            filtered = filtered.filter(v => v !== 0);
             while (filtered.length < 4) filtered.push(0);
-            if (dir==='R'||dir==='D') filtered.reverse();
+            if (dir === 'R' || dir === 'D') filtered.reverse();
+
             for (let j = 0; j < 4; j++) {
-                let idx = (dir==='L'||dir==='R') ? i*4+j : j*4+i;
-                if (b2048[idx] !== filtered[j]) moved = true;
-                b2048[idx] = filtered[j];
+                let idx = (dir === 'L' || dir === 'R') ? (i * 4 + j) : (j * 4 + i);
+                if (grid2048[idx] !== filtered[j]) moved = true;
+                grid2048[idx] = filtered[j];
             }
         }
-        if (moved) { add2048Tile(); render2048Board(); }
+        if (moved) { addTile2048(); render2048(); }
     }
 
-    /* --- GAME 5: IQ MEMORY TEST --- */
-    let iqSeq = [], userSeq = [], iqLvl = 0;
-    function openIQ() { document.getElementById('iqModal').style.display = 'flex'; iqSeq = []; iqLvl = 0; nextIQ(); }
-    function nextIQ() {
-        userSeq = []; iqLvl++;
-        document.getElementById('iqStatus').innerText = `Round ${iqLvl}: Memorize Pattern!`;
-        iqSeq.push(Math.floor(Math.random()*4));
-        let i = 0;
-        let t = setInterval(() => {
-            let b = document.getElementById('b' + iqSeq[i]); b.classList.add('active');
-            setTimeout(() => b.classList.remove('active'), 300); i++;
-            if (i >= iqSeq.length) { clearInterval(t); document.getElementById('iqStatus').innerText = "Your Turn: Repeat Pattern!"; }
-        }, 550);
+    // --- GAME 5: IQ MEMORY TEST ---
+    let iqSeq = [], iqUserSeq = [], iqLvl = 0, iqAccept = false;
+
+    function initIQ() {
+        iqSeq = []; iqLvl = 0;
+        nextIQRound();
     }
-    function pressIQ(n) {
-        userSeq.push(n);
-        let idx = userSeq.length - 1;
-        if (userSeq[idx] !== iqSeq[idx]) { alert(`🧠 Game Over! Level Reached: ${iqLvl}`); openIQ(); return; }
-        if (userSeq.length === iqSeq.length) setTimeout(nextIQ, 500);
+    function nextIQRound() {
+        iqUserSeq = []; iqLvl++; iqAccept = false;
+        document.getElementById('iqStatus').innerText = "Round " + iqLvl + ": Memorize!";
+        iqSeq.push(Math.floor(Math.random() * 4));
+        let idx = 0;
+        let timer = setInterval(() => {
+            flashIQBox(iqSeq[idx]);
+            idx++;
+            if (idx >= iqSeq.length) {
+                clearInterval(timer);
+                setTimeout(() => {
+                    iqAccept = true;
+                    document.getElementById('iqStatus').innerText = "Your Turn! Repeat Pattern.";
+                }, 400);
+            }
+        }, 600);
+    }
+    function flashIQBox(id) {
+        let el = document.getElementById('b' + id);
+        el.classList.add('active');
+        setTimeout(() => el.classList.remove('active'), 300);
+    }
+    function pressIQ(id) {
+        if (!iqAccept) return;
+        flashIQBox(id);
+        iqUserSeq.push(id);
+        let curStep = iqUserSeq.length - 1;
+        if (iqUserSeq[curStep] !== iqSeq[curStep]) {
+            alert("Pattern Missed! Score Level: " + iqLvl);
+            initIQ();
+            return;
+        }
+        if (iqUserSeq.length === iqSeq.length) {
+            iqAccept = false;
+            setTimeout(nextIQRound, 800);
+        }
     }
 
-    /* --- GAME 6: 15-TILE SLIDE PUZZLE --- */
-    let sTiles = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0];
-    function openSlidePuzzle() {
-        document.getElementById('slideModal').style.display = 'flex';
-        sTiles.sort(() => Math.random() - 0.5); renderSlide();
+    // --- GAME 6: 15-TILE SLIDE ---
+    let sGrid = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0];
+
+    function initSlide() {
+        sGrid.sort(() => Math.random() - 0.5);
+        renderSlide();
     }
     function renderSlide() {
-        let b = document.getElementById('slideBoard'); b.innerHTML = '';
-        sTiles.forEach((val, idx) => {
+        let box = document.getElementById('slideBoard'); box.innerHTML = '';
+        sGrid.forEach((val, idx) => {
             let cell = document.createElement('div');
             cell.className = 'cell-slide' + (val === 0 ? ' empty' : '');
             cell.innerText = val ? val : '';
             cell.onclick = () => moveSlideTile(idx);
-            b.appendChild(cell);
+            box.appendChild(cell);
         });
     }
     function moveSlideTile(idx) {
-        let emptyIdx = sTiles.indexOf(0);
-        let validMoves = [idx-1, idx+1, idx-4, idx+4];
-        if (validMoves.includes(emptyIdx)) {
-            sTiles[emptyIdx] = sTiles[idx];
-            sTiles[idx] = 0;
+        let emptyIdx = sGrid.indexOf(0);
+        let row = Math.floor(idx / 4), col = idx % 4;
+        let eRow = Math.floor(emptyIdx / 4), eCol = emptyIdx % 4;
+        
+        if (Math.abs(row - eRow) + Math.abs(col - eCol) === 1) {
+            sGrid[emptyIdx] = sGrid[idx];
+            sGrid[idx] = 0;
             renderSlide();
         }
     }
