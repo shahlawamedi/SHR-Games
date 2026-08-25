@@ -83,6 +83,15 @@
         .n-key { background: linear-gradient(180deg, #334155, #0f172a); color: #f8fafc; border: 1px solid #475569; border-radius: 10px; padding: 8px 0; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
         .n-key:active { background: #38bdf8; color: #000; }
 
+        /* --- SNAKES & LADDERS VISUAL CONTAINER --- */
+        .sl-wrapper { position: relative; width: 100%; max-width: 320px; margin: 0 auto; }
+        .sl-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #0b132b; padding: 4px; border-radius: 12px; aspect-ratio: 1; }
+        .sl-cell { background: #1e293b; font-size: 0.55rem; color: #64748b; display: flex; justify-content: center; align-items: center; border-radius: 2px; font-weight: bold; position: relative; }
+        .sl-cell.snake-head { background: #450a0a; color: #f87171; }
+        .sl-cell.ladder-bottom { background: #064e3b; color: #34d399; }
+        .sl-token { position: absolute; font-size: 0.75rem; z-index: 5; }
+        .dice-box { width: 44px; height: 44px; background: #fff; border-radius: 10px; margin: 8px auto; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; color: #0f172a; font-weight: bold; }
+
         /* --- 2048 TOUCH BOARD --- */
         .grid-2048 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; touch-action: none; width: 100%; aspect-ratio: 1; }
         .cell-2048 { aspect-ratio: 1; background: #1c2541; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.2rem; color: #fff; }
@@ -91,11 +100,6 @@
         .grid-slide { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #0b132b; padding: 8px; border-radius: 12px; margin: 12px 0; aspect-ratio: 1; }
         .cell-slide { aspect-ratio: 1; background: #38bdf8; color: #0b132b; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1.1rem; cursor: pointer; }
         .cell-slide.empty { background: transparent; border: 1px dashed var(--card-border); cursor: default; }
-
-        /* --- SNAKES & LADDERS --- */
-        .sl-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #0b132b; padding: 6px; border-radius: 12px; margin: 12px 0; max-height: 220px; overflow-y: auto; }
-        .sl-cell { aspect-ratio: 1; background: #222e50; font-size: 0.55rem; color: #64748b; display: flex; justify-content: center; align-items: center; border-radius: 3px; font-weight: bold; }
-        .dice-box { width: 44px; height: 44px; background: #fff; border-radius: 10px; margin: 8px auto; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; color: #0f172a; font-weight: bold; }
 
         /* --- IQ MEMORY GRID --- */
         .iq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 12px 0; aspect-ratio: 1; }
@@ -115,7 +119,7 @@
         <div class="game-card" onclick="openGame('nokiaModal', initNokia)">
             <i class="fa-solid fa-mobile-screen-button" style="color: #8bac0f;"></i>
             <h4>Nokia 3310 Snake</h4>
-            <span>Classic Keypad</span>
+            <span>Keypad & Arrows</span>
         </div>
 
         <div class="game-card" onclick="openGame('towerModal', initTower)">
@@ -127,7 +131,7 @@
         <div class="game-card" onclick="openGame('snakesModal', initSL)">
             <i class="fa-solid fa-dice" style="color: #ec4899;"></i>
             <h4>Snakes & Ladders</h4>
-            <span>Board vs AI</span>
+            <span>Visual Board vs AI</span>
         </div>
 
         <div class="game-card" onclick="openGame('m2048Modal', init2048)">
@@ -197,7 +201,9 @@
     <div class="modal-content">
         <h3>Snakes & Ladders</h3>
         <p id="slStatus" style="font-size: 0.8rem; color: var(--accent); margin-bottom:6px;">Your Turn! Roll the dice.</p>
-        <div class="sl-board" id="slBoard"></div>
+        <div class="sl-wrapper">
+            <div class="sl-board" id="slBoard"></div>
+        </div>
         <div class="dice-box" id="diceDisplay">🎲</div>
         <button class="game-card" onclick="rollSLDice()" style="width:100%; flex-direction:row; gap:8px; margin-top:8px;"><i class="fa-solid fa-dice"></i> Roll Dice</button>
         <button class="close-btn" onclick="closeGame('snakesModal')">Close Game</button>
@@ -240,7 +246,6 @@
 </div>
 
 <script>
-    // --- UTILITY ENGINE ---
     function openGame(id, initFunc) {
         document.getElementById(id).style.display = 'flex';
         if (initFunc) initFunc();
@@ -260,7 +265,7 @@
         document.getElementById('nokiaScore').innerText = "SCORE: 0";
         spawnNokiaFood();
         clearInterval(nLoop);
-        nLoop = setInterval(updateNokia, 120);
+        nLoop = setInterval(updateNokia, 110);
     }
     function stopNokia() { clearInterval(nLoop); }
     function spawnNokiaFood() {
@@ -275,6 +280,15 @@
         else if (y === -1 && ndy === 0) { ndx = 0; ndy = -10; }
         else if (y === 1 && ndy === 0) { ndx = 0; ndy = 10; }
     }
+    
+    // Physical Keyboard Listener
+    window.addEventListener('keydown', e => {
+        if (e.key === 'ArrowUp' || e.key === '2') setNokiaDir(0, -1);
+        else if (e.key === 'ArrowDown' || e.key === '8') setNokiaDir(0, 1);
+        else if (e.key === 'ArrowLeft' || e.key === '4') setNokiaDir(-1, 0);
+        else if (e.key === 'ArrowRight' || e.key === '6') setNokiaDir(1, 0);
+    });
+
     function updateNokia() {
         let head = {x: nSnake[0].x + ndx, y: nSnake[0].y + ndy};
         if (head.x < 0 || head.x >= 160 || head.y < 0 || head.y >= 140 || nSnake.some(s => s.x === head.x && s.y === head.y)) {
@@ -351,9 +365,10 @@
         spawnTowerBlock();
     };
 
-    // --- GAME 3: SNAKES & LADDERS ---
+    // --- GAME 3: SNAKES & LADDERS VISUAL ENGINE ---
     let pPos = 1, bPos = 1, slTurn = true;
-    const snakesLaddersMap = { 16: 6, 47: 26, 49: 11, 56: 53, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 98: 78, 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
+    const snakes = { 98: 78, 95: 75, 93: 73, 87: 24, 64: 60, 62: 19, 49: 11, 47: 26, 16: 6 };
+    const ladders = { 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
 
     function initSL() {
         pPos = 1; bPos = 1; slTurn = true;
@@ -362,16 +377,35 @@
     function renderSL() {
         let board = document.getElementById('slBoard'); board.innerHTML = '';
         document.getElementById('slStatus').innerText = `🔴 You: Tile ${pPos} | 🤖 AI: Tile ${bPos}`;
-        for (let i = 100; i >= 1; i--) {
-            let cell = document.createElement('div'); cell.className = 'sl-cell';
-            let mark = '';
-            if (pPos === i && bPos === i) mark = '🔴🤖';
-            else if (pPos === i) mark = '🔴';
-            else if (bPos === i) mark = '🤖';
-            else mark = i;
-            cell.innerText = mark;
-            board.appendChild(cell);
+        
+        let gridCells = [];
+        for (let row = 9; row >= 0; row--) {
+            let rowCells = [];
+            for (let col = 0; col < 10; col++) {
+                let cellNum = (row % 2 === 1) ? (row * 10 + (10 - col)) : (row * 10 + col + 1);
+                rowCells.push(cellNum);
+            }
+            gridCells.push(...rowCells);
         }
+
+        gridCells.forEach(i => {
+            let cell = document.createElement('div');
+            cell.className = 'sl-cell';
+            
+            if (snakes[i]) { cell.classList.add('snake-head'); cell.innerText = `🐍${i}`; }
+            else if (ladders[i]) { cell.classList.add('ladder-bottom'); cell.innerText = `🪜${i}`; }
+            else { cell.innerText = i; }
+
+            if (pPos === i && bPos === i) {
+                let t = document.createElement('span'); t.className = 'sl-token'; t.innerText = '🔴🤖'; cell.appendChild(t);
+            } else if (pPos === i) {
+                let t = document.createElement('span'); t.className = 'sl-token'; t.innerText = '🔴'; cell.appendChild(t);
+            } else if (bPos === i) {
+                let t = document.createElement('span'); t.className = 'sl-token'; t.innerText = '🤖'; cell.appendChild(t);
+            }
+
+            board.appendChild(cell);
+        });
     }
     function rollSLDice() {
         if (!slTurn) return;
@@ -379,14 +413,16 @@
         document.getElementById('diceDisplay').innerText = roll;
         pPos += roll;
         if (pPos >= 100) { pPos = 100; renderSL(); alert("🎉 Victory! You won!"); initSL(); return; }
-        if (snakesLaddersMap[pPos]) pPos = snakesLaddersMap[pPos];
+        if (snakes[pPos]) pPos = snakes[pPos];
+        if (ladders[pPos]) pPos = ladders[pPos];
         renderSL();
         slTurn = false;
         setTimeout(() => {
             let bRoll = Math.floor(Math.random() * 6) + 1;
             bPos += bRoll;
             if (bPos >= 100) { bPos = 100; renderSL(); alert("🤖 AI Won! Better luck next time."); initSL(); return; }
-            if (snakesLaddersMap[bPos]) bPos = snakesLaddersMap[bPos];
+            if (snakes[bPos]) bPos = snakes[bPos];
+            if (ladders[bPos]) bPos = ladders[bPos];
             slTurn = true;
             renderSL();
         }, 700);
